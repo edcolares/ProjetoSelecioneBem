@@ -1,9 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, Timestamp } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { Candidate } from "./Candidate";
+import { Rating } from "./Rating";
+import { User } from "./User";
+import { Opportunity } from "./Opportunity";
 
 @Entity('interview')
 export class Interview {
-    @PrimaryGeneratedColumn()
-    idInterview: number
+    @PrimaryGeneratedColumn('increment')
+    id: number
 
     @Column({ type: 'timestamp without time zone' })
     startDate: Date
@@ -21,6 +25,25 @@ export class Interview {
     totalScore: number
 
     @Column({ type: 'varchar', length: 1024, nullable: true })
-    note: string    
+    note: string
 
+    @CreateDateColumn({ name: 'create_At' })
+    createAt: Date
+
+    @UpdateDateColumn({ name: 'update_At' })
+    updateAt: Date
+    
+    @ManyToOne(() => Candidate, candidate => candidate.interviews)
+    @JoinTable()
+    candidate: Candidate
+
+    @OneToMany(() => Rating, rating => rating.interview)
+    ratings: Rating[]
+
+    @ManyToOne(() => User, user => user.interviews)
+    @JoinTable()
+    user: User
+
+    @ManyToOne(() => Opportunity, opportunity => opportunity.interviews)
+    opportunity: Opportunity
 }

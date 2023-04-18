@@ -1,10 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Opportunity } from "./Opportunity";
+import { Skill } from "./Skill";
 
 @Entity('opportunity_skill')
 export class Opportunity_Skill {
-	@PrimaryGeneratedColumn()
-	idOpportunity_Skill: number
+	@PrimaryGeneratedColumn('increment')
+	id: number
 
 	@Column({ type: 'int', comment: "" })
-	weightingFactor: number	
+	weightingFactor: number
+
+	@CreateDateColumn({ name: 'create_At' })
+    createAt: Date
+
+	@ManyToOne(() => Opportunity, (opportunity) => opportunity.opportunitySkills, { onDelete: "CASCADE" })
+	opportunity: Opportunity
+
+	@ManyToOne(() => Skill, (skill) => skill.opportunitySkills)
+	skill: Skill
 }

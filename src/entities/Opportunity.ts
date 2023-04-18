@@ -1,9 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Department } from "./Department";
+import { Opportunity_Skill } from "./Opportunity_Skill";
+import { User } from "./User";
+import { Interview } from "./Interview";
 
 @Entity('opportunity')
 export class Opportunity {
-    @PrimaryGeneratedColumn()
-    idOpportunity: number
+    @PrimaryGeneratedColumn('increment')
+    id: number
 
     @Column({ type: 'varchar', length: 254 })
     title: string
@@ -20,4 +24,23 @@ export class Opportunity {
     @Column({ type: 'date', nullable: true })
     closingDate: Date
 
+    @CreateDateColumn({ name: 'create_At' })
+    createAt: Date
+
+    @UpdateDateColumn({ name: 'update_At' })
+    updateAt: Date
+
+    @ManyToOne(() => Department, department => department.opportunities)
+    department: Department;
+
+    @OneToMany(() => Opportunity_Skill, opportunity_Skill => opportunity_Skill.opportunity)
+    @JoinTable()
+    opportunitySkills: Opportunity_Skill[]
+
+    @ManyToOne(() => User, user => user.opportunities)
+    @JoinTable()
+    user: User
+
+    @OneToMany(() => Interview, interview => interview.opportunity)
+    interviews: Interview[]
 }
