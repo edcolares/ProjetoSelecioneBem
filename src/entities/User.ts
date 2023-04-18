@@ -1,6 +1,8 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { Interview } from "./Interview"
 import { Opportunity } from "./Opportunity"
+import * as bcrypt  from 'bcrypt'
+
 
 @Entity('user')
 export class User {
@@ -13,7 +15,7 @@ export class User {
     @Column({ type: 'varchar', unique: true, length: 254 })
     email: string
 
-    @Column({ type: 'varchar', length: 32 })
+    @Column({ type: 'varchar', length: 254, select: false })
     password: string
 
     @CreateDateColumn({ name: 'create_At' })
@@ -22,7 +24,12 @@ export class User {
     @UpdateDateColumn({ name: 'update_At' })
     updateAt: Date
 
-    @OneToMany((name: "Teste") => Opportunity, opportunity => opportunity.user)
+    @BeforeInsert()
+    async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 10);
+    }
+
+    @OneToMany(() => Opportunity, opportunity => opportunity.user)
     opportunities: Opportunity[];
 
     @OneToMany(() => Interview, interview => interview.user)

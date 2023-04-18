@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 import { Candidate } from "./Candidate";
 import { Rating } from "./Rating";
 import { User } from "./User";
@@ -32,9 +32,10 @@ export class Interview {
 
     @UpdateDateColumn({ name: 'update_At' })
     updateAt: Date
-    
+
     @ManyToOne(() => Candidate, candidate => candidate.interviews)
     @JoinTable()
+    @JoinColumn({ name: 'FK_candidateId' })
     candidate: Candidate
 
     @OneToMany(() => Rating, rating => rating.interview)
@@ -42,8 +43,11 @@ export class Interview {
 
     @ManyToOne(() => User, user => user.interviews)
     @JoinTable()
+    @JoinColumn({ name: 'FK_userId' })
     user: User
 
     @ManyToOne(() => Opportunity, opportunity => opportunity.interviews)
+    @JoinTable()
+    @JoinColumn({ name: 'FK_opportunityId' })
     opportunity: Opportunity
 }

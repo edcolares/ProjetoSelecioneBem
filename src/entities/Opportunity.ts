@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Department } from "./Department";
 import { Opportunity_Skill } from "./Opportunity_Skill";
 import { User } from "./User";
@@ -18,7 +18,7 @@ export class Opportunity {
     @Column({ type: 'date' })
     openingDate: Date
 
-    @Column({ type: 'date', nullable: true })
+    @Column({ type: 'date' })
     expectedDate: Date
 
     @Column({ type: 'date', nullable: true })
@@ -31,6 +31,8 @@ export class Opportunity {
     updateAt: Date
 
     @ManyToOne(() => Department, department => department.opportunities)
+    @JoinTable()
+    @JoinColumn({ name: "FK_departmentId" })
     department: Department;
 
     @OneToMany(() => Opportunity_Skill, opportunity_Skill => opportunity_Skill.opportunity)
@@ -39,6 +41,7 @@ export class Opportunity {
 
     @ManyToOne(() => User, user => user.opportunities)
     @JoinTable()
+    @JoinColumn({ name: "FK_userId" })
     user: User
 
     @OneToMany(() => Interview, interview => interview.opportunity)

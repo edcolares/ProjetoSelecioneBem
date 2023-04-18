@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Opportunity } from "./Opportunity";
 import { Skill } from "./Skill";
 
@@ -14,8 +14,12 @@ export class Opportunity_Skill {
     createAt: Date
 
 	@ManyToOne(() => Opportunity, (opportunity) => opportunity.opportunitySkills, { onDelete: "CASCADE" })
+	@JoinTable()
+	@JoinColumn({name: "FK_opportunityId"})
 	opportunity: Opportunity
 
 	@ManyToOne(() => Skill, (skill) => skill.opportunitySkills)
+	@JoinTable()
+	@JoinColumn({name: "FK_skillId"})
 	skill: Skill
 }

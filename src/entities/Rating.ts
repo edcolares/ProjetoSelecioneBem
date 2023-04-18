@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Skill } from "./Skill";
 import { Interview } from "./Interview";
 
@@ -15,9 +15,11 @@ export class Rating {
 
     @ManyToOne(() => Interview, (interview) => interview.ratings, { onDelete: "CASCADE" })
     @JoinTable()
-	interview: Interview
+    @JoinColumn({ name: "FK_interviewId" })
+    interview: Interview
 
     @ManyToOne(() => Skill, (skill) => skill.ratings)
     @JoinTable()
-	skill: Skill
+    @JoinColumn({ name: "FK_skillId" })
+    skill: Skill
 }

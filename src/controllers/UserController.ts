@@ -1,20 +1,20 @@
-import { Request, Response } from "express";
-import { candidateRepository } from "../repositories/candidateRepository";
+import { Request, Response} from "express";
+import { userRepository } from "../repositories/userRepository";
 
-export class CandidateController {
+export class UserController {
 
     /** Cria um novo candidato */
     async create(req: Request, res: Response) {
-        const { name, email } = req.body
+        const { name, email, password } = req.body
 
-        if (!name || !email || name.trim() === '' || email.trim() === '') {
-            return res.status(400).json({ message: 'Nome e email são campos obrigatórios' })
+        if (!name || !email || !password || name.trim() === '' || email.trim() === '' || password.trim() === '') {
+            return res.status(400).json({ message: 'Algo não foi preenchido corretamente' })
         }
 
         try {
-            const newCandidate = candidateRepository.create({ name, email })
-            await candidateRepository.save(newCandidate)
-            return res.status(201).json(newCandidate)
+            const newUser = userRepository.create({ name, email, password })
+            await userRepository.save(newUser)
+            return res.status(201).json(newUser)
 
         } catch (error) {
             console.log(error)
@@ -28,11 +28,11 @@ export class CandidateController {
         const { email } = req.body
 
         try {
-            const candidate = await candidateRepository.findOneBy({ email: email })
-            if (!candidate) {
+            const user = await userRepository.findOneBy({ email: email })
+            if (!user) {
                 return res.status(404).json({ message: 'Não existe nenhum candidato com esse email cadastrado' })
             }
-            res.json(candidate)
+            res.json(user)
 
         } catch (error) {
             console.log(error)
@@ -45,12 +45,12 @@ export class CandidateController {
         const { id } = req.body
 
         try {
-            const candidate = await candidateRepository.findOneBy({ id: Number(id) })
-            if (!candidate) {
+            const user = await userRepository.findOneBy({ id: Number(id) })
+            if (!user) {
                 return res.status(404).json({ message: 'Não existe nenhum candidato com esse email cadastrado' })
             }
-            candidateRepository.merge(candidate, req.body)
-            const results = await candidateRepository.save(candidate)
+            userRepository.merge(user, req.body)
+            const results = await userRepository.save(user)
             return res.send(results)
         } catch (error) {
             console.log(error)
