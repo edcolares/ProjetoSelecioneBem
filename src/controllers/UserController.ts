@@ -1,4 +1,4 @@
-import { Request, Response} from "express";
+import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
 
 export class UserController {
@@ -58,4 +58,26 @@ export class UserController {
 
         }
     }
+
+    /******************************* DELETAR *******************************/
+    async delete(req: Request, res: Response) {
+        const { idUser } = req.params
+
+        try {
+            const user = await userRepository.findOneBy({
+                id: Number(idUser),
+            })
+
+            if (!user) {
+                return res.status(404).json({ message: 'Usuário não foi encontrado.' })
+            }
+
+            const results = await userRepository.remove(user)
+            return res.send(results)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Sever Error' })
+        }
+    }
+
 }

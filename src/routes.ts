@@ -1,10 +1,16 @@
 import { Router } from "express";
 import { CandidateController } from './controllers/CandidateController'
 import { UserController } from "./controllers/UserController";
+import { DepartmentController } from "./controllers/DepartmentController";
+import { SkillController } from "./controllers/SkillController";
+import { InterviewController } from "./controllers/InterviewController";
 
 const routes = Router();
 const candidate = new CandidateController();
 const user = new UserController();
+const department = new DepartmentController();
+const skill = new SkillController();
+const interview = new InterviewController();
 
 /* Rotas para CANDIDATE */
 routes.post('/candidate', candidate.create);
@@ -15,6 +21,19 @@ routes.put('/candidate', candidate.update);
 routes.post('/user', user.create);
 routes.get('/user', user.findEmail);
 routes.put('/user', user.update);
+routes.delete('/user/:idUser', user.delete);
 
+/* Rotas para DEPARTMENT */
+routes.post('/department', department.create);
+routes.get('/department', department.find);
+routes.put('/department', department.update);
+
+/* Rotas para SKILL */
+routes.post('/skill', skill.create);
+routes.get('/skill', skill.find);
+routes.put('/skill', skill.update);
+
+/* Rotas para INTERVIEW */
+routes.post('/interview', interview.create);
 
 export default routes;
