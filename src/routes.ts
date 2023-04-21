@@ -4,6 +4,7 @@ import { UserController } from "./controllers/UserController";
 import { DepartmentController } from "./controllers/DepartmentController";
 import { SkillController } from "./controllers/SkillController";
 import { InterviewController } from "./controllers/InterviewController";
+import { OpportunityController } from "./controllers/OpportunityController";
 
 const routes = Router();
 const candidate = new CandidateController();
@@ -11,6 +12,8 @@ const user = new UserController();
 const department = new DepartmentController();
 const skill = new SkillController();
 const interview = new InterviewController();
+const opportunity = new OpportunityController();
+
 
 /* Rotas para CANDIDATE */
 routes.post('/candidate', candidate.create);
@@ -35,5 +38,12 @@ routes.put('/skill', skill.update);
 
 /* Rotas para INTERVIEW */
 routes.post('/interview', interview.create);
+routes.get('/interview/:idUser', interview.listByUser);
+
+/* Rotas para OPPORTUNITY */
+routes.post('/opportunity', opportunity.create);
+routes.get('/opportunity/:idUser', opportunity.listByUser);
+
+
 
 export default routes;

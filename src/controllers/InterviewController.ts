@@ -3,6 +3,7 @@ import { interviewRepository } from "../repositories/interviewRepository";
 import { candidateRepository } from "../repositories/candidateRepository";
 import { userRepository } from "../repositories/userRepository";
 import { opportunityRepository } from "../repositories/opportunityRepository";
+import { departmentRepository } from "../repositories/departmentRepository";
 
 export class InterviewController {
 
@@ -10,9 +11,9 @@ export class InterviewController {
     async create(req: Request, res: Response) {
         const { startDate, finishDate, delay, duration, totalScore, note, FK_candidateId, FK_userId, FK_opportunityId } = req.body
 
-        // if (!startDate || !finishDate || !delay || !duration || !totalScore || !note || !FK_candidateId || !FK_userId || !FK_opportunityId || startDate.trim() === '' || finishDate.trim() === '' || delay.trim() === '' || duration.trim() === '' || totalScore.trim() === '' || FK_candidateId.trim() === '' || FK_userId.trim() === '' || FK_opportunityId.trim() === '') {
-        //     return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' + req.body.FK_opportunityId + req.body.FK_userId })
-        // }
+        if (!startDate || !finishDate || !duration || !totalScore || !note || !FK_candidateId || !FK_userId || !FK_opportunityId) {
+            return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' })
+        }
 
         const candidate = await candidateRepository.findOneBy({ id: Number(FK_candidateId) })
         const user = await userRepository.findOneBy({ id: Number(FK_userId) })
@@ -33,6 +34,31 @@ export class InterviewController {
 
         }
     }
+
+
+    async listByUser(req: Request, res: Response) {
+        const { idUser } = req.params
+        const num = Number(idUser)
+        const interviewAll = await interviewRepository
+            .createQueryBuilder('interview')
+            .leftJoinAndSelect('interview.user', 'user')
+            .leftJoinAndSelect('interview.candidate', 'candidate')
+            .leftJoinAndSelect('interview.opportunity', 'opportunity')
+            .where('user.id = :id', { id: num })
+            .getMany();
+
+        const opportunityAll = await opportunityRepository
+            .createQueryBuilder('opportunity')
+            .leftJoinAndSelect('opportunity.user', 'user')
+            .leftJoinAndSelect('opportunity.department', 'department')
+            .where('user.id = :id', { id: num })
+            .getMany();
+
+        // res.json(interviewAll)
+        res.json(opportunityAll)
+
+    }
+
 
     /** Listar candidatos por email */
     async find(req: Request, res: Response) {

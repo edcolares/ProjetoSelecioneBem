@@ -25,7 +25,6 @@ export class DepartmentController {
 
     /** Listar candidatos por email */
     async find(req: Request, res: Response) {
-        const { email } = req.body
 
         try {
             const department = await departmentRepository.find()
@@ -43,7 +42,6 @@ export class DepartmentController {
     /** Desenvolver */
     async update(req: Request, res: Response) {
         const { id } = req.body
-        console.log(req.body);
         
         try {
             const department = await departmentRepository.findOneBy({ id: Number(id) })
