@@ -57,4 +57,25 @@ export class DepartmentController {
 
         }
     }
+
+    /******************************* DELETAR *******************************/
+    async delete(req: Request, res: Response) {
+        const { idDepartment } = req.params
+
+        try {
+            const department = await departmentRepository.findOneBy({
+                id: Number(idDepartment),
+            })
+
+            if (!department) {
+                return res.status(404).json({ message: 'Área não foi encontrada.' })
+            }
+
+            const results = await departmentRepository.remove(department)
+            return res.send(results)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Sever Error' })
+        }
+    }
 }

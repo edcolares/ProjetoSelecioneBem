@@ -94,4 +94,25 @@ export class InterviewController {
 
         }
     }
+
+    /******************************* DELETAR *******************************/
+    async delete(req: Request, res: Response) {
+        const { idInterview } = req.params
+
+        try {
+            const interview = await interviewRepository.findOneBy({
+                id: Number(idInterview),
+            })
+
+            if (!interview) {
+                return res.status(404).json({ message: 'Entrevista não foi encontrado.' })
+            }
+
+            const results = await interviewRepository.remove(interview)
+            return res.send(results)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Sever Error' })
+        }
+    }
 }

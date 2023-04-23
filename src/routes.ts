@@ -19,6 +19,7 @@ const opportunity = new OpportunityController();
 routes.post('/candidate', candidate.create);
 routes.get('/candidate', candidate.findEmail);
 routes.put('/candidate', candidate.update);
+routes.delete('/candidate/:idCandidate', candidate.delete);
 
 /* Rotas para USER */
 routes.post('/user', user.create);
@@ -30,20 +31,24 @@ routes.delete('/user/:idUser', user.delete);
 routes.post('/department', department.create);
 routes.get('/department', department.find);
 routes.put('/department', department.update);
+routes.delete('department/:idDepartment', department.delete);
 
 /* Rotas para SKILL */
 routes.post('/skill', skill.create);
 routes.get('/skill', skill.find);
 routes.put('/skill', skill.update);
+routes.delete('/skill/:idSkill', skill.delete)
 
 /* Rotas para INTERVIEW */
 routes.post('/interview', interview.create);
 routes.get('/interview/:idUser', interview.listByUser);
+routes.delete('/interview/:idInterview', interview.delete)
 
 /* Rotas para OPPORTUNITY */
 routes.post('/opportunity', opportunity.create);
 routes.get('/opportunity/:idUser', opportunity.listByUser);
-
+//To Do: criar rota novas
+routes.post('/opportunity', opportunity.delete)
 
 
 export default routes;

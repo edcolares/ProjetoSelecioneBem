@@ -58,4 +58,27 @@ export class CandidateController {
 
         }
     }
+
+    /******************************* DELETAR *******************************/
+    async delete(req: Request, res: Response) {
+        const { idCandidate } = req.params
+
+        try {
+            const candidate = await candidateRepository.findOneBy({
+                id: Number(idCandidate),
+            })
+
+            if (!candidate) {
+                return res.status(404).json({ message: 'Candidato não foi encontrado.' })
+            }
+
+            const results = await candidateRepository.remove(candidate)
+            return res.send(results)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Sever Error' })
+        }
+    }
+
+
 }

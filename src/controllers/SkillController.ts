@@ -55,4 +55,26 @@ export class SkillController {
 
         }
     }
+
+    /******************************* DELETAR *******************************/
+ async delete(req: Request, res: Response) {
+    const { idSkill } = req.params
+
+    try {
+        const skill = await skillRepository.findOneBy({
+            id: Number(idSkill),
+        })
+
+        if (!skill) {
+            return res.status(404).json({ message: 'Competência não foi encontrada.' })
+        }
+
+        const results = await skillRepository.remove(skill)
+        return res.send(results)
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({ message: 'Internal Sever Error' })
+    }
+}
+
 }
