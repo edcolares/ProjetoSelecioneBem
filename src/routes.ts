@@ -42,13 +42,13 @@ routes.delete('/skill/:idSkill', skill.delete)
 /* Rotas para INTERVIEW */
 routes.post('/interview', interview.create);
 routes.get('/interview/:idUser', interview.listByUser);
-routes.delete('/interview/:idInterview', interview.delete)
+routes.get('/interview', interview.find);
+routes.get('/interview/:initialDate/:finalDate', interview.getInterviewsBetweenDates);
+routes.delete('/interview/:idInterview', interview.delete);
 
 /* Rotas para OPPORTUNITY */
 routes.post('/opportunity', opportunity.create);
 routes.get('/opportunity/:idUser', opportunity.listByUser);
-//To Do: criar rota novas
-routes.post('/opportunity', opportunity.delete)
-
+routes.delete('/opportunity/:idJobOpportunity', opportunity.delete)
 
 export default routes;

@@ -1,7 +1,7 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
+import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { Interview } from "./Interview"
 import { Opportunity } from "./Opportunity"
-import * as bcrypt  from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 
 
 @Entity('user')
@@ -18,11 +18,17 @@ export class User {
     @Column({ type: 'varchar', length: 254, select: false })
     password: string
 
+    @Column({ type: 'boolean', default: 'true' })
+    isActive: boolean
+
     @CreateDateColumn({ name: 'create_At' })
     createAt: Date
 
     @UpdateDateColumn({ name: 'update_At' })
     updateAt: Date
+
+    @DeleteDateColumn({ name: 'remove_At' })
+    removeAt: Date
 
     @BeforeInsert()
     async hashPassword() {

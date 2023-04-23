@@ -35,32 +35,50 @@ export class InterviewController {
         }
     }
 
-
     async listByUser(req: Request, res: Response) {
-        const { idUser } = req.params
-        const num = Number(idUser)
-        const interviewAll = await interviewRepository
-            .createQueryBuilder('interview')
-            .leftJoinAndSelect('interview.user', 'user')
-            .leftJoinAndSelect('interview.candidate', 'candidate')
-            .leftJoinAndSelect('interview.opportunity', 'opportunity')
-            .where('user.id = :id', { id: num })
-            .getMany();
+        try {
+            const { idUser } = req.params
+            const num = Number(idUser)
+            const interviewAll = await interviewRepository
+                .createQueryBuilder('interview')
+                .leftJoinAndSelect('interview.user', 'user')
+                .leftJoinAndSelect('interview.candidate', 'candidate')
+                .leftJoinAndSelect('interview.opportunity', 'opportunity')
+                .where('user.id = :id', { id: num })
+                .getMany();
 
-        const opportunityAll = await opportunityRepository
-            .createQueryBuilder('opportunity')
-            .leftJoinAndSelect('opportunity.user', 'user')
-            .leftJoinAndSelect('opportunity.department', 'department')
-            .where('user.id = :id', { id: num })
-            .getMany();
-
-        // res.json(interviewAll)
-        res.json(opportunityAll)
-
+            res.json(interviewAll)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
     }
 
+    /** Function para retornar entrevistas de um período entre duas datas
+         * Datainicial até DataFinal
+        */
+    async getInterviewsBetweenDates(req: Request, res: Response) {
+        const { initialDate, finalDate } = req.params
 
-    /** Listar candidatos por email */
+        try {
+
+            const interview = await interviewRepository
+                .createQueryBuilder('interview')
+                .where('interview.startDate > :initialDate AND interview.finishDate < :finalDate', { initialDate, finalDate })
+                .getMany();
+
+            if (!interview) {
+                return res.status(404).json({ message: 'Não existe entrevistas cadastradas' })
+            }
+            res.json(interview)
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+    /** Busca todas as entrevistas realizadas sem nenhum parametro */
     async find(req: Request, res: Response) {
 
         try {
@@ -76,7 +94,9 @@ export class InterviewController {
         }
     }
 
-    /** Desenvolver */
+    /** Achamos que não será utilizado
+     * Usuário não terá a opção de ATUALIZAR UMA INTREVISTA
+     */
     async update(req: Request, res: Response) {
         const { id } = req.body
 
@@ -95,7 +115,9 @@ export class InterviewController {
         }
     }
 
-    /******************************* DELETAR *******************************/
+    /** Entrevista não poderá ser excluida, pois uma vez realizada não haverá
+         * atualização, nem exclusão da mesma.
+         */
     async delete(req: Request, res: Response) {
         const { idInterview } = req.params
 

@@ -72,8 +72,11 @@ export class UserController {
                 return res.status(404).json({ message: 'Usuário não foi encontrado.' })
             }
 
-            const results = await userRepository.remove(user)
+            user.isActive = false;
+            user.removeAt = new Date();
+            const results = await userRepository.save(user);
             return res.send(results)
+                        
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Sever Error' })
