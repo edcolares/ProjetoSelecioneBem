@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Opportunity } from "./Opportunity";
+import { JobOpportunity } from "./JobOpportunity";
 
 @Entity('department')
 export class Department {
@@ -15,6 +15,6 @@ export class Department {
     @Column({ type: 'varchar', length: 254, unique: true })
     email: string
 
-    @OneToMany(() => Opportunity, opportunity => opportunity.department)
-    opportunities: Opportunity[];
+    @OneToMany(() => JobOpportunity, jobopportunity => jobopportunity.department)
+    jobopportunities: JobOpportunity[];
 }

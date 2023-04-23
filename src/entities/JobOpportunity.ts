@@ -1,11 +1,11 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Department } from "./Department";
-import { Opportunity_Skill } from "./Opportunity_Skill";
+import { JobOpportunity_Skill } from "./JobOpportunity_Skill";
 import { User } from "./User";
 import { Interview } from "./Interview";
 
-@Entity('opportunity')
-export class Opportunity {
+@Entity('jobopportunity')
+export class JobOpportunity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
@@ -30,20 +30,20 @@ export class Opportunity {
     @UpdateDateColumn({ name: 'update_At' })
     updateAt: Date
 
-    @ManyToOne(() => Department, department => department.opportunities)
+    @ManyToOne(() => Department, department => department.jobopportunities)
     @JoinTable()
     @JoinColumn({ name: "FK_departmentId" })
     department: Department;
 
-    @OneToMany(() => Opportunity_Skill, opportunity_Skill => opportunity_Skill.opportunity)
+    @OneToMany(() => JobOpportunity_Skill, jobopportunity_Skill => jobopportunity_Skill.jobopportunity)
     @JoinTable()
-    opportunitySkills: Opportunity_Skill[]
+    jobopportunitySkills: JobOpportunity_Skill[]
 
-    @ManyToOne(() => User, user => user.opportunities)
+    @ManyToOne(() => User, user => user.jobopportunities)
     @JoinTable()
     @JoinColumn({ name: "FK_userId" })
     user: User
 
-    @OneToMany(() => Interview, interview => interview.opportunity)
+    @OneToMany(() => Interview, interview => interview.jobopportunity)
     interviews: Interview[]
 }

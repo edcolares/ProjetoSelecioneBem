@@ -2,7 +2,7 @@ import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, One
 import { Candidate } from "./Candidate";
 import { Rating } from "./Rating";
 import { User } from "./User";
-import { Opportunity } from "./Opportunity";
+import { JobOpportunity } from "./JobOpportunity";
 
 @Entity('interview')
 export class Interview {
@@ -46,8 +46,8 @@ export class Interview {
     @JoinColumn({ name: 'FK_userId' })
     user: User
 
-    @ManyToOne(() => Opportunity, opportunity => opportunity.interviews)
+    @ManyToOne(() => JobOpportunity, jobopportunity => jobopportunity.interviews)
     @JoinTable()
-    @JoinColumn({ name: 'FK_opportunityId' })
-    opportunity: Opportunity
+    @JoinColumn({ name: 'FK_jobopportunityId' })
+    jobopportunity: JobOpportunity
 }

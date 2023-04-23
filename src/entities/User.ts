@@ -1,6 +1,6 @@
 import { BeforeInsert, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
 import { Interview } from "./Interview"
-import { Opportunity } from "./Opportunity"
+import { JobOpportunity } from "./JobOpportunity"
 import * as bcrypt from 'bcrypt'
 
 
@@ -35,8 +35,8 @@ export class User {
         this.password = await bcrypt.hash(this.password, 10);
     }
 
-    @OneToMany(() => Opportunity, opportunity => opportunity.user)
-    opportunities: Opportunity[];
+    @OneToMany(() => JobOpportunity, jobopportunity => jobopportunity.user)
+    jobopportunities: JobOpportunity[];
 
     @OneToMany(() => Interview, interview => interview.user)
     interviews: Interview[];

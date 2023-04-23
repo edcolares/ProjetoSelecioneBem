@@ -1,9 +1,9 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Opportunity } from "./Opportunity";
+import { JobOpportunity } from "./JobOpportunity";
 import { Skill } from "./Skill";
 
-@Entity('opportunity_skill')
-export class Opportunity_Skill {
+@Entity('jobopportunity_skill')
+export class JobOpportunity_Skill {
 	@PrimaryGeneratedColumn('increment')
 	id: number
 
@@ -13,12 +13,12 @@ export class Opportunity_Skill {
 	@CreateDateColumn({ name: 'create_At' })
     createAt: Date
 
-	@ManyToOne(() => Opportunity, (opportunity) => opportunity.opportunitySkills, { onDelete: "CASCADE" })
+	@ManyToOne(() => JobOpportunity, (jobopportunity) => jobopportunity.jobopportunitySkills, { onDelete: "CASCADE" })
 	@JoinTable()
-	@JoinColumn({name: "FK_opportunityId"})
-	opportunity: Opportunity
+	@JoinColumn({name: "FK_jobopportunityId"})
+	jobopportunity: JobOpportunity
 
-	@ManyToOne(() => Skill, (skill) => skill.opportunitySkills)
+	@ManyToOne(() => Skill, (skill) => skill.jobopportunitySkills)
 	@JoinTable()
 	@JoinColumn({name: "FK_skillId"})
 	skill: Skill

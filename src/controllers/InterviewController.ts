@@ -2,28 +2,28 @@ import { Request, Response } from "express";
 import { interviewRepository } from "../repositories/interviewRepository";
 import { candidateRepository } from "../repositories/candidateRepository";
 import { userRepository } from "../repositories/userRepository";
-import { opportunityRepository } from "../repositories/opportunityRepository";
+import { jobopportunityRepository } from "../repositories/jobopportunityRepository";
 
 export class InterviewController {
 
     /** Cria uma nova entrevista */
     async create(req: Request, res: Response) {
-        const { startDate, finishDate, delay, duration, totalScore, note, FK_candidateId, FK_userId, FK_opportunityId } = req.body
+        const { startDate, finishDate, delay, duration, totalScore, note, FK_candidateId, FK_userId, FK_jobopportunityId } = req.body
 
-        if (!startDate || !finishDate || !duration || !totalScore || !note || !FK_candidateId || !FK_userId || !FK_opportunityId) {
+        if (!startDate || !finishDate || !duration || !totalScore || !note || !FK_candidateId || !FK_userId || !FK_jobopportunityId) {
             return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' })
         }
 
         const candidate = await candidateRepository.findOneBy({ id: Number(FK_candidateId) })
         const user = await userRepository.findOneBy({ id: Number(FK_userId) })
-        const opportunity = await opportunityRepository.findOneBy({ id: Number(FK_opportunityId) })
+        const jobopportunity = await jobopportunityRepository.findOneBy({ id: Number(FK_jobopportunityId) })
 
-        if (!candidate || !user || !opportunity) {
+        if (!candidate || !user || !jobopportunity) {
             return res.status(404).json({ message: 'Alguma chave estrangeira não existe' })
         }
 
         try {
-            const newInterview = interviewRepository.create({ startDate, finishDate, delay, duration, totalScore, note, candidate, user, opportunity })
+            const newInterview = interviewRepository.create({ startDate, finishDate, delay, duration, totalScore, note, candidate, user, jobopportunity })
             await interviewRepository.save(newInterview)
             return res.status(201).json(newInterview)
 
@@ -42,7 +42,7 @@ export class InterviewController {
                 .createQueryBuilder('interview')
                 .leftJoinAndSelect('interview.user', 'user')
                 .leftJoinAndSelect('interview.candidate', 'candidate')
-                .leftJoinAndSelect('interview.opportunity', 'opportunity')
+                .leftJoinAndSelect('interview.jobopportunity', 'jobopportunity')
                 .where('user.id = :id', { id: num })
                 .getMany();
 

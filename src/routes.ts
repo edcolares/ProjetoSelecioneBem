@@ -4,7 +4,7 @@ import { UserController } from "./controllers/UserController";
 import { DepartmentController } from "./controllers/DepartmentController";
 import { SkillController } from "./controllers/SkillController";
 import { InterviewController } from "./controllers/InterviewController";
-import { OpportunityController } from "./controllers/OpportunityController";
+import { JobOpportunityController } from "./controllers/JobOpportunityController";
 
 const routes = Router();
 const candidate = new CandidateController();
@@ -12,7 +12,7 @@ const user = new UserController();
 const department = new DepartmentController();
 const skill = new SkillController();
 const interview = new InterviewController();
-const opportunity = new OpportunityController();
+const jobopportunity = new JobOpportunityController();
 
 
 /* Rotas para CANDIDATE */
@@ -47,8 +47,9 @@ routes.get('/interview/:initialDate/:finalDate', interview.getInterviewsBetweenD
 routes.delete('/interview/:idInterview', interview.delete);
 
 /* Rotas para OPPORTUNITY */
-routes.post('/opportunity', opportunity.create);
-routes.get('/opportunity/:idUser', opportunity.listByUser);
-routes.delete('/opportunity/:idJobOpportunity', opportunity.delete)
+routes.post('/jobopportunity', jobopportunity.create);
+routes.get('/jobopportunity/:idUser', jobopportunity.listByUser);
+routes.get('/jobopportunity', jobopportunity.find);
+routes.delete('/jobopportunity/:idJobOpportunity', jobopportunity.delete);
 
 export default routes;

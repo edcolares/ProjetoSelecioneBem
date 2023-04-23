@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { Opportunity_Skill } from "./Opportunity_Skill";
+import { JobOpportunity_Skill } from "./JobOpportunity_Skill";
 import { Rating } from "./Rating";
 
 @Entity('skill')
@@ -13,8 +13,8 @@ export class Skill {
 	@Column({ type: 'varchar', length: 50, comment: "" })
 	type: string
 
-	@OneToMany(() => Opportunity_Skill, opportunity_Skill => opportunity_Skill.skill)
-	opportunitySkills: Opportunity_Skill[]
+	@OneToMany(() => JobOpportunity_Skill, jobopportunity_Skill => jobopportunity_Skill.skill)
+	jobopportunitySkills: JobOpportunity_Skill[]
 
 	@OneToMany(() => Rating, rating => rating.skill)
     ratings: Rating[]

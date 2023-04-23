@@ -30,7 +30,7 @@ export class UserController {
         try {
             const user = await userRepository.findOneBy({ email: email })
             if (!user) {
-                return res.status(404).json({ message: 'Não existe nenhum candidato com esse email cadastrado' })
+                return res.status(404).json({ message: 'Não foi encontrado nenhum usuário' })
             }
             res.json(user)
 
