@@ -3,7 +3,6 @@ import { interviewRepository } from "../repositories/interviewRepository";
 import { candidateRepository } from "../repositories/candidateRepository";
 import { userRepository } from "../repositories/userRepository";
 import { opportunityRepository } from "../repositories/opportunityRepository";
-import { departmentRepository } from "../repositories/departmentRepository";
 
 export class InterviewController {
 
