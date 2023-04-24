@@ -1,10 +1,11 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, JoinTable, ManyToOne, OneToMany, PrimaryGeneratedColumn, Timestamp, UpdateDateColumn } from "typeorm";
 import { Candidate } from "./Candidate";
 import { Rating } from "./Rating";
 import { User } from "./User";
 import { JobOpportunity } from "./JobOpportunity";
 
 @Entity('interview')
+@Index('jobopportunity_candidate_UNIQUE', ['jobopportunity', 'candidate'], { unique: true })
 export class Interview {
     @PrimaryGeneratedColumn('increment')
     id: number
@@ -33,12 +34,12 @@ export class Interview {
     @UpdateDateColumn({ name: 'update_At' })
     updateAt: Date
 
-    @ManyToOne(() => Candidate, candidate => candidate.interviews)
+    @ManyToOne(() => Candidate, candidate => candidate.interviews, { eager: true })
     @JoinTable()
     @JoinColumn({ name: 'FK_candidateId' })
     candidate: Candidate
 
-    @OneToMany(() => Rating, rating => rating.interview)
+    @OneToMany(() => Rating, rating => rating.interview, { eager: true })
     ratings: Rating[]
 
     @ManyToOne(() => User, user => user.interviews)

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { candidateRepository } from "../repositories/candidateRepository";
+import { interviewRepository } from "../repositories/interviewRepository";
 
 export class CandidateController {
 
@@ -23,8 +24,8 @@ export class CandidateController {
         }
     }
 
-    /** Listar candidatos por email */
-    async findEmail(req: Request, res: Response) {
+    /** Busca um CANDIDATO por seu e-mail de cadastro */
+    async findByEmail(req: Request, res: Response) {
         const { email } = req.body
 
         try {
@@ -33,6 +34,29 @@ export class CandidateController {
                 return res.status(404).json({ message: 'Não existe nenhum candidato com esse email cadastrado' })
             }
             res.json(candidate)
+
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+    /** Listar um CANDIDATO e todas as suas ENTREVISTAS  */
+    async findByEmailWithInterviews(req: Request, res: Response) {
+        const { email } = req.params
+        console.log(email)
+
+        try {
+            const candidate = await candidateRepository.findOneBy({ email: email })
+            console.log('id Candidato' + candidate?.id);
+            
+            const interviews = await interviewRepository.find({
+                where: {
+                    candidate: {id: candidate?.id}
+                },
+                relations: ['candidate']
+            })
+            res.json(interviews)
 
         } catch (error) {
             console.log(error)

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
 import { jobopportunityRepository } from "../repositories/jobopportunityRepository";
 import { departmentRepository } from "../repositories/departmentRepository";
+import { interviewRepository } from "../repositories/interviewRepository";
 
 export class JobOpportunityController {
 
@@ -52,6 +53,26 @@ export class JobOpportunityController {
 
     }
 
+    /** Buscar todas INTERVIEWS de uma determinada JOBOPPORTUNITY
+     *  Parametros:     idJobOpportunity = Identifica o Id da JOBOPPORTUNITY
+     */
+    async getInterviewsByJobOpportunity(req: Request, res: Response) {
+        const { idJobOpportunity } = req.params
+        try {
+            const interviews = await interviewRepository
+                .createQueryBuilder('interview')
+                .leftJoinAndSelect('interview.jobopportunity', 'jobopportunity')
+                .leftJoinAndSelect('interview.candidate', 'candidate')
+                .where('jobopportunity.id = :id', { id: idJobOpportunity })
+                .getMany();
+
+            res.json(interviews)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+
+    }
 
     /** Listar candidatos por email */
     async find(req: Request, res: Response) {
@@ -69,12 +90,6 @@ export class JobOpportunityController {
         }
     }
 
-    /** To do: delete modelo: user* OK/
-    /** To do: update */
-    /** To do: listarPorDatas */
-    /** To do: listarPorDepartamentos */
-    /** To do: listarPorDatas */
-    /** To do: listarOportunidadesAbertas(sem data de encerramento) */
 
     /** Desenvolver */
     async update(req: Request, res: Response) {

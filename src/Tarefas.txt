@@ -1,0 +1,59 @@
+Thunder Client
+> Em 23/04 foi realizado os testes nas tarefas abaixas do qual todas rodaram bem
+
+User
+> create - OK
+> findEmail - OK
+> delete - OK (Atualiza data remoção e isActive)
+
+Skill
+> create - OK
+> FindAll - OK
+> Update - OK
+>  Delete - OK (Remove caso não tenha nenhuma chave estrangeira)
+
+Department
+> create - OK (mas acho que precisamos inserir campo isActive (Boolean)
+> findAll - OK
+> update - OK
+
+Candidate
+> create - OK
+> findOneEmail - OK
+> update - OK (Porem usa res.body)
+> delete - OK (Teste somente sem entrevista)
+> delete - ?? (verificar com entrevista) - Não deve deletar
+
+JobOpportunity
+> create - OK
+> listByUser - OK
+> listAll - OK
+> delete - OK
+
+
+******** 23/04/2023 (tarde) ********
+> Foi adicionado algumas chaves UNIQUE para envitar inserção de dados em duplicidade, são:
+>> tabela Interview:        Unique (FK_candidateId, FK_jobopportunityId)
+>> tabela rating:           Unique (FK_interviewId, FK_skillId)
+>> tabela JobOpportunity_Skill: Unique ('jobopportunity', 'skill')
+
+> Buscar por Candidate e suas Interview (todas)
+
+> Buscar entrevistas entre duas datas (OK)
+
+> Buscar todas as interviews de uma JobOpportunity (OK)
+
+> Foi alterado a consulta de Interview findAll, agora todas elas trazem os rating (eager: true)
+
+> Sempre que Rating for chamado vai carregar Skill, pois foi inserido um eager na relação.
+
+> Create para a tabela JobOpportunity_Skill
+
+> 
+
+
+    /** To do: update */
+    /** To do: listarPorDatas */
+    /** To do: listarPorDepartamentos */
+    /** To do: listarPorDatas */
+    /** To do: listarOportunidadesAbertas(sem data de encerramento) */

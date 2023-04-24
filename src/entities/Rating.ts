@@ -1,8 +1,9 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Skill } from "./Skill";
 import { Interview } from "./Interview";
 
 @Entity('rating')
+@Index('interview_skill_UNIQUE', ['interview', 'skill'], { unique: true })
 export class Rating {
     @PrimaryGeneratedColumn('increment')
     id: number
@@ -18,7 +19,7 @@ export class Rating {
     @JoinColumn({ name: "FK_interviewId" })
     interview: Interview
 
-    @ManyToOne(() => Skill, (skill) => skill.ratings)
+    @ManyToOne(() => Skill, (skill) => skill.ratings, { eager: true })
     @JoinTable()
     @JoinColumn({ name: "FK_skillId" })
     skill: Skill
