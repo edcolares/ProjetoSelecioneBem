@@ -6,6 +6,7 @@ import { Skill } from "../entities/Skill"
 import { JobOpportunity_Skill } from "../entities/JobOpportunity_Skill"
 import { Interview } from "../entities/Interview"
 import { Rating } from "../entities/Rating"
+import { JobOpportunity } from "../entities/JobOpportunity"
 
 
 export class JobOpportunity_SkillController {
@@ -53,25 +54,37 @@ export class JobOpportunity_SkillController {
         const { idJobOpportunity_Skill } = req.params
 
         if (!idJobOpportunity_Skill) {
-            return res.status(400).json({ message: "O id não foi encontrado" })
+            return res.status(400).json({ message: "O id não foi passado por parametro" })
         }
 
+        console.log("Parametro >> " + Number(idJobOpportunity_Skill));
+
         const jobOpportunity_Skill = await jobopportunity_skillRepository.findOneBy({ id: Number(idJobOpportunity_Skill) })
-        const idJobOport = jobOpportunity_Skill?.jobopportunity
+        const idOpportunidade = jobOpportunity_Skill['FK_jobopportunityId']
+
+        // const jobOpportunity_Skill = await jobopportunity_skillRepository.findOne({
+        //     where: { id: Number(idJobOpportunity_Skill) },
+        //   });
+
+        res.json(idOpportunidade)
 
 
-        const jobOpportunity_Contain_Interview = await jobopportunityRepository
-            .createQueryBuilder("jo")
-            .innerJoinAndSelect(JobOpportunity_Skill, "jos", "jo.id = jos.FK_jobopportunityId")
-            .innerJoinAndSelect(Skill, "s", "jos.FK_skillId = s.id")
-            .innerJoin(Interview, "i", "jo.id = i.FK_jobopportunityId")
-            .innerJoin(Rating, "r", "i.id = r.FK_interviewId AND s.id = r.FK_skillId")
-            .where("jo.id = :jobOpportunityId", { jobOpportunityId: 2 })
-            .andWhere("s.id = 2")
-            .getMany();
+        // const jobOpportunity_Contain_Interview = await jobopportunityRepository
+        //     .createQueryBuilder("jo")
+        //     .innerJoinAndSelect(JobOpportunity_Skill, "jos", "jo.id = jos.FK_jobopportunityId")
+        //     .innerJoinAndSelect(Skill, "s", "jos.FK_skillId = s.id")
+        //     .innerJoin(Interview, "i", "jo.id = i.FK_jobopportunityId")
+        //     .innerJoin(Rating, "r", "i.id = r.FK_interviewId AND s.id = r.FK_skillId")
+        //     .where("jo.id = :jobOpportunityId", { jobOpportunityId: 1 })
+        //     .andWhere("s.id = 1")
+        //     .getMany();
 
-
-        res.json(jobOpportunity_Contain_Interview)
+        // if (jobOpportunity_Contain_Interview.length === 0) {
+        //     console.log("Pode deletar")
+        // } else {
+        //     console.log("Não pode deletar")
+        // }
+        // res.json(jobOpportunity_Contain_Interview)
 
     }
 }

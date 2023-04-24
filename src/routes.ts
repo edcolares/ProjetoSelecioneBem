@@ -60,4 +60,6 @@ routes.delete('/jobopportunity/:idJobOpportunity', jobopportunity.delete);
 /* Rotas para JOBOPPORTUNITY_SKILL*/
 routes.post('/jobopportunity_skill/:idJobOpportunity', jobopportunity_skill.create);
 routes.delete('/jobopportunity_skill/:idJobOpportunity_Skill', jobopportunity_skill.delete);
+
+
 export default routes;

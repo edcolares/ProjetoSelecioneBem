@@ -1,0 +1,483 @@
+{
+    "client": "Thunder Client",
+    "collectionName": "SelecioneBem",
+    "dateExported": "2023-04-24T03:20:52.557Z",
+    "version": "1.1",
+    "folders": [
+        {
+            "_id": "6d2fb3bd-3f4a-4463-8f9d-e8f3335f5e4e",
+            "name": "Candidate",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.055Z",
+            "sortNum": 10000
+        },
+        {
+            "_id": "611e6ba5-180d-42c2-b8fd-7302ed99da59",
+            "name": "Department",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.056Z",
+            "sortNum": 30000
+        },
+        {
+            "_id": "ca9dcf70-4f5a-48e4-b478-b8036003353c",
+            "name": "Skill",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.057Z",
+            "sortNum": 32500
+        },
+        {
+            "_id": "390997d5-c600-46de-9e73-e2806211aa1f",
+            "name": "User",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.058Z",
+            "sortNum": 35000
+        },
+        {
+            "_id": "9be5f310-a01a-4cff-bbf3-2790d3df6b59",
+            "name": "Interview",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.059Z",
+            "sortNum": 45000
+        },
+        {
+            "_id": "65b9b32d-1bc3-4656-b3cc-77a0a13fbe6b",
+            "name": "JobOpportunity",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.060Z",
+            "sortNum": 55000
+        },
+        {
+            "_id": "58c3dc28-ba7c-4453-85c4-adf7f42fb92f",
+            "name": "JobOpportunity_Skill",
+            "containerId": "",
+            "created": "2023-04-24T01:18:50.061Z",
+            "sortNum": 65000
+        }
+    ],
+    "requests": [
+        {
+            "_id": "22e4864f-c278-490e-bbfc-63c8cf4e6a08",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "6d2fb3bd-3f4a-4463-8f9d-e8f3335f5e4e",
+            "name": "create",
+            "url": "http://localhost:3001/candidate",
+            "method": "POST",
+            "sortNum": 10000,
+            "created": "2023-04-24T01:18:50.055Z",
+            "modified": "2023-04-24T01:49:18.999Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Franguito Fogaça\",\n  \"email\": \"ff@email.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e66d0f62-9551-4283-b849-caeba2c0b4fa",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "6d2fb3bd-3f4a-4463-8f9d-e8f3335f5e4e",
+            "name": "findByEmail",
+            "url": "http://localhost:3001/candidate",
+            "method": "GET",
+            "sortNum": 20000,
+            "created": "2023-04-24T01:18:50.056Z",
+            "modified": "2023-04-24T01:18:50.056Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\":\"apo02@email.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "4bed2294-c92f-4fe6-91a6-1d5106c5ff3a",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "6d2fb3bd-3f4a-4463-8f9d-e8f3335f5e4e",
+            "name": "findByEmailWithInterviews",
+            "url": "http://localhost:3001/candidate/apo01@email.com",
+            "method": "GET",
+            "sortNum": 25000,
+            "created": "2023-04-24T01:18:50.057Z",
+            "modified": "2023-04-24T01:18:50.057Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "37fcaf1c-db5a-42b3-b7ad-605778e42d21",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "6d2fb3bd-3f4a-4463-8f9d-e8f3335f5e4e",
+            "name": "update",
+            "url": "http://localhost:3001/candidate",
+            "method": "PUT",
+            "sortNum": 30000,
+            "created": "2023-04-24T01:18:50.058Z",
+            "modified": "2023-04-24T01:18:50.058Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"id\": 2,\n  \"name\": \"Apolinário Tester 2\",\n  \"email\": \"apo02@email.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "c02c28a6-4de3-4cf2-b57c-fd40d8011084",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "390997d5-c600-46de-9e73-e2806211aa1f",
+            "name": "create",
+            "url": "http://localhost:3001/user",
+            "method": "POST",
+            "sortNum": 40000,
+            "created": "2023-04-24T01:18:50.059Z",
+            "modified": "2023-04-24T01:22:22.736Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Ed Cool\",\n  \"email\": \"ed@email.com\",\n  \"password\": \"123456\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "2911dc70-e759-4b98-bf0e-f14faa708e8d",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "390997d5-c600-46de-9e73-e2806211aa1f",
+            "name": "findEmail",
+            "url": "http://localhost:3001/user",
+            "method": "GET",
+            "sortNum": 50000,
+            "created": "2023-04-24T01:18:50.060Z",
+            "modified": "2023-04-24T01:18:50.060Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"email\": \"siclano@email.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "83780f1a-1812-40e9-a041-b2fee586d64e",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "611e6ba5-180d-42c2-b8fd-7302ed99da59",
+            "name": "Create",
+            "url": "http://localhost:3001/department",
+            "method": "POST",
+            "sortNum": 60000,
+            "created": "2023-04-24T01:18:50.061Z",
+            "modified": "2023-04-24T01:24:42.850Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Logística\",\n  \"manager\": \"Gertrudes Grill\",\n  \"email\": \"gg@email.com\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "5ed2c51a-7dc8-43c7-bd8f-878c724a8b64",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "611e6ba5-180d-42c2-b8fd-7302ed99da59",
+            "name": "findAll",
+            "url": "http://localhost:3001/department",
+            "method": "GET",
+            "sortNum": 70000,
+            "created": "2023-04-24T01:18:50.062Z",
+            "modified": "2023-04-24T01:18:50.062Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "3f3a91b0-65bc-4ee6-ae01-4ff0276b75cb",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "65b9b32d-1bc3-4656-b3cc-77a0a13fbe6b",
+            "name": "create",
+            "url": "http://localhost:3001/jobopportunity",
+            "method": "POST",
+            "sortNum": 70000,
+            "created": "2023-04-24T01:18:50.063Z",
+            "modified": "2023-04-24T01:29:53.422Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"title\": \"Estágio RH\",\n  \"level\": \"Junior\",\n  \"openingDate\": \"2023-03-22\",\n  \"expectedDate\": \"2023-04-10\",\n  \"closingDate\": \"\",\n  \"FK_departmentId\":1,\n  \"FK_userId\":2\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "23bb93a2-f80c-4d46-af51-c65d78bf6571",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "611e6ba5-180d-42c2-b8fd-7302ed99da59",
+            "name": "Update",
+            "url": "http://localhost:3001/department",
+            "method": "PUT",
+            "sortNum": 80000,
+            "created": "2023-04-24T01:18:50.064Z",
+            "modified": "2023-04-24T01:18:50.064Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"RH Drop\",\n  \"id\": 3\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "fd2bbc3a-f8e6-4e54-8761-d96f0e40e53e",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "65b9b32d-1bc3-4656-b3cc-77a0a13fbe6b",
+            "name": "listInterviewsByJobOpportunity",
+            "url": "http://localhost:3001/jobopportunities/3",
+            "method": "GET",
+            "sortNum": 87500,
+            "created": "2023-04-24T01:18:50.065Z",
+            "modified": "2023-04-24T01:18:50.065Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "2e427d0a-6289-4c1e-81aa-c969883fbc04",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "ca9dcf70-4f5a-48e4-b478-b8036003353c",
+            "name": "Create",
+            "url": "http://localhost:3001/skill",
+            "method": "POST",
+            "sortNum": 90000,
+            "created": "2023-04-24T01:18:50.066Z",
+            "modified": "2023-04-24T01:32:06.597Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Comunicação\",\n  \"type\": \"Soft Skill\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "f0aa9416-8368-4a17-8731-c9723b199b1c",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "ca9dcf70-4f5a-48e4-b478-b8036003353c",
+            "name": "FindAll",
+            "url": "http://localhost:3001/skill",
+            "method": "GET",
+            "sortNum": 100000,
+            "created": "2023-04-24T01:18:50.067Z",
+            "modified": "2023-04-24T01:18:50.067Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "f0a8ebf6-ed99-4587-b062-c179a2201404",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "65b9b32d-1bc3-4656-b3cc-77a0a13fbe6b",
+            "name": "listAll",
+            "url": "http://localhost:3001/jobopportunity",
+            "method": "GET",
+            "sortNum": 105000,
+            "created": "2023-04-24T01:18:50.068Z",
+            "modified": "2023-04-24T01:18:50.068Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c0c13115-4e2d-4a4d-9925-ca845eb06f84",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "ca9dcf70-4f5a-48e4-b478-b8036003353c",
+            "name": "Update",
+            "url": "http://localhost:3001/skill",
+            "method": "PUT",
+            "sortNum": 110000,
+            "created": "2023-04-24T01:18:50.069Z",
+            "modified": "2023-04-24T01:18:50.069Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"name\": \"Manutenção\",\n  \"type\": \"Hard\",\n  \"id\": 6\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "9b66a4f2-e7ea-47d5-aaf5-2376b06df416",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "390997d5-c600-46de-9e73-e2806211aa1f",
+            "name": "Delete",
+            "url": "http://localhost:3001/user/2",
+            "method": "DELETE",
+            "sortNum": 120000,
+            "created": "2023-04-24T01:18:50.070Z",
+            "modified": "2023-04-24T01:18:50.070Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "e284fc2b-631f-41bb-ab27-386a9e54f6e9",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "9be5f310-a01a-4cff-bbf3-2790d3df6b59",
+            "name": "Create",
+            "url": "http://localhost:3001/interview",
+            "method": "POST",
+            "sortNum": 130000,
+            "created": "2023-04-24T01:18:50.071Z",
+            "modified": "2023-04-24T01:51:31.655Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"startDate\": \"2023-03-11 10:03:03\",\n  \"finishDate\": \"2023-03-11 10:04:04\",\n  \"delay\": false,\n  \"duration\": \"01:10:05\",\n  \"totalScore\": 180,\n  \"note\": \"Excelente entrevista\",\n  \"FK_candidateId\": 2,\n  \"FK_userId\": 2,\n  \"FK_jobopportunityId\": 1\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "7d6257b2-2182-43d2-b90c-b9b4be29fe99",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "9be5f310-a01a-4cff-bbf3-2790d3df6b59",
+            "name": "ListByUser",
+            "url": "http://localhost:3001/interview/2",
+            "method": "GET",
+            "sortNum": 140000,
+            "created": "2023-04-24T01:18:50.072Z",
+            "modified": "2023-04-24T01:18:50.072Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "8deb895b-2243-4b6e-b24b-4399380592db",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "65b9b32d-1bc3-4656-b3cc-77a0a13fbe6b",
+            "name": "ListByJobOpportunity",
+            "url": "http://localhost:3001/jobopportunity/1",
+            "method": "GET",
+            "sortNum": 140000,
+            "created": "2023-04-24T01:18:50.074Z",
+            "modified": "2023-04-24T01:18:50.074Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "7286a2e8-996a-4bc1-bde5-5aa87faaa247",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "65b9b32d-1bc3-4656-b3cc-77a0a13fbe6b",
+            "name": "delete",
+            "url": "http://localhost:3001/jobopportunity/1",
+            "method": "DELETE",
+            "sortNum": 160000,
+            "created": "2023-04-24T01:18:50.075Z",
+            "modified": "2023-04-24T01:18:50.075Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "c7871341-8176-459c-9937-c0223971b991",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "ca9dcf70-4f5a-48e4-b478-b8036003353c",
+            "name": "delete",
+            "url": "http://localhost:3001/skill/6",
+            "method": "DELETE",
+            "sortNum": 170000,
+            "created": "2023-04-24T01:18:50.076Z",
+            "modified": "2023-04-24T01:18:50.076Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "11c20adf-3ce9-4649-a9e8-705a0ee8421d",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "6d2fb3bd-3f4a-4463-8f9d-e8f3335f5e4e",
+            "name": "delete",
+            "url": "http://localhost:3001/candidate/3",
+            "method": "DELETE",
+            "sortNum": 190000,
+            "created": "2023-04-24T01:18:50.077Z",
+            "modified": "2023-04-24T01:18:50.077Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "d96ff245-4cc9-4ede-8c3f-be486fa8bd12",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "9be5f310-a01a-4cff-bbf3-2790d3df6b59",
+            "name": "FindAll",
+            "url": "http://localhost:3001/interview",
+            "method": "GET",
+            "sortNum": 220000,
+            "created": "2023-04-24T01:18:50.078Z",
+            "modified": "2023-04-24T01:18:50.078Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "6d30b22e-fb21-4b6c-83ec-e2dab5358a3e",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "9be5f310-a01a-4cff-bbf3-2790d3df6b59",
+            "name": "GetEntreDatas",
+            "url": "http://localhost:3001/interview/2023-01-01/2023-01-06",
+            "method": "GET",
+            "sortNum": 240000,
+            "created": "2023-04-24T01:18:50.079Z",
+            "modified": "2023-04-24T01:18:50.079Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        },
+        {
+            "_id": "375c9cfb-eb9e-46c4-8b5f-3d000ef908ca",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "58c3dc28-ba7c-4453-85c4-adf7f42fb92f",
+            "name": "create",
+            "url": "http://localhost:3001/jobopportunity_skill/1",
+            "method": "POST",
+            "sortNum": 260000,
+            "created": "2023-04-24T01:18:50.080Z",
+            "modified": "2023-04-24T01:34:45.403Z",
+            "headers": [],
+            "params": [],
+            "body": {
+                "type": "json",
+                "raw": "{\n  \"weightingFactor\": \"7\",\n  \"FK_skillId\": \"5\"\n}",
+                "form": []
+            },
+            "tests": []
+        },
+        {
+            "_id": "e305aa75-1785-45b5-8d75-095a04a7ea50",
+            "colId": "4b0395aa-8bca-4926-855b-ecfd0fd3227b",
+            "containerId": "58c3dc28-ba7c-4453-85c4-adf7f42fb92f",
+            "name": "delete",
+            "url": "http://localhost:3001/jobopportunity_skill/2",
+            "method": "DELETE",
+            "sortNum": 270000,
+            "created": "2023-04-24T01:18:50.081Z",
+            "modified": "2023-04-24T03:13:48.686Z",
+            "headers": [],
+            "params": [],
+            "tests": []
+        }
+    ]
+}
