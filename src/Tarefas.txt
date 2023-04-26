@@ -49,7 +49,10 @@ JobOpportunity
 
 > Create para a tabela JobOpportunity_Skill
 
-> 
+> Aceita a exclusão de uma jobopportunity_skill desde que ela não possua um RATING.
+
+******** 24/04/2023 ********
+> O metodo UPDATE da classe JOBOPPORTUNITY_SKILL concluída (Validando se o número é inteiro)
 
 
     /** To do: update */

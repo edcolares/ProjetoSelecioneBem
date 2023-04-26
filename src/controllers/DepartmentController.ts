@@ -3,7 +3,12 @@ import { departmentRepository } from "../repositories/departmentRepository";
 
 export class DepartmentController {
 
-    /** Cria um novo DEPARTMENT */
+    /**
+     * Function tem por objetivo inserir um novo departamento
+     * @param req Request
+     * @param res Response
+     * @returns res.Status(201).json()
+     */
     async create(req: Request, res: Response) {
         const { name, manager, email } = req.body
 
@@ -23,11 +28,16 @@ export class DepartmentController {
         }
     }
 
-    /** Listar candidatos por email */
+    /**
+     * Function irá listar todos os departamentos ativos
+     * @param req Request
+     * @param res Response
+     * @returns return res.status(200).json()
+     */
     async find(req: Request, res: Response) {
 
         try {
-            const department = await departmentRepository.find()
+            const department = await departmentRepository.findBy({ isActive: true })
             if (!department) {
                 return res.status(404).json({ message: 'Não possui nenhum departamento cadastrado' })
             }
@@ -39,12 +49,17 @@ export class DepartmentController {
         }
     }
 
-    /** Desenvolver */
+    /**
+     * Function tem por finalidade atualizar as informações de um departamento
+     * @param req request
+     * @param res response
+     * @returns JSON
+     */
     async update(req: Request, res: Response) {
-        const { id } = req.body
-        
+        const { idDepartment } = req.params
+
         try {
-            const department = await departmentRepository.findOneBy({ id: Number(id) })
+            const department = await departmentRepository.findOneBy({ id: Number(idDepartment) })
             if (!department) {
                 return res.status(404).json({ message: 'Não foi encontrado nenhum candidato' })
             }
@@ -58,7 +73,13 @@ export class DepartmentController {
         }
     }
 
-    /******************************* DELETAR *******************************/
+    /**
+     * Exclui um registro se não houver dependencia na tabela entrevistas
+     * @param req 
+     * @param res 
+     * @returns 
+     * Não consegui testar, está dando erro
+     */
     async delete(req: Request, res: Response) {
         const { idDepartment } = req.params
 
@@ -68,7 +89,7 @@ export class DepartmentController {
             })
 
             if (!department) {
-                return res.status(404).json({ message: 'Área não foi encontrada.' })
+                return res.status(404).json({ message: 'Não encontramos nenhum dado.' })
             }
 
             const results = await departmentRepository.remove(department)

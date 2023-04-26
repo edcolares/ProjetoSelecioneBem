@@ -4,7 +4,13 @@ import { interviewRepository } from "../repositories/interviewRepository";
 
 export class CandidateController {
 
-    /** Cria um novo candidato */
+    /**
+     * Function responsável pela criação de um novo candidato
+     * @param req.body (name, email)
+     * @param req Request
+     * @param res Response
+     * @returns Status em JSON
+     */
     async create(req: Request, res: Response) {
         const { name, email } = req.body
 
@@ -24,7 +30,13 @@ export class CandidateController {
         }
     }
 
-    /** Busca um CANDIDATO por seu e-mail de cadastro */
+    /**
+     * Essa function tem por objetivo realizar uma busca por email em candidatos
+     * @param req.body (email)
+     * @param req Request
+     * @param res Response
+     * @returns Status por JSON
+     */
     async findByEmail(req: Request, res: Response) {
         const { email } = req.body
 
@@ -41,22 +53,31 @@ export class CandidateController {
         }
     }
 
-    /** Listar um CANDIDATO e todas as suas ENTREVISTAS  */
+    /**
+     * Busca um candidato por email e todas as suas ENTREVISTAS
+     * @param params email do candidato
+     * @param req request
+     * @param res Response
+     * @returns Status por JSON com mensagem
+     */
     async findByEmailWithInterviews(req: Request, res: Response) {
         const { email } = req.params
-        console.log(email)
 
         try {
-            const candidate = await candidateRepository.findOneBy({ email: email })
-            console.log('id Candidato' + candidate?.id);
-            
-            const interviews = await interviewRepository.find({
-                where: {
-                    candidate: {id: candidate?.id}
+
+            const candidateInterviews = await candidateRepository.find({
+                relations: {
+                    interviews: {
+                        ratings: {
+                            skill: true,
+                        },
+                    },
                 },
-                relations: ['candidate']
+                where: {
+                    email: email,
+                },
             })
-            res.json(interviews)
+            return res.json(candidateInterviews)
 
         } catch (error) {
             console.log(error)
@@ -64,14 +85,19 @@ export class CandidateController {
         }
     }
 
-    /** Desenvolver */
+    /**
+     * Atualizar um candidato por id
+     * @param req idCandidate
+     * @param res Response
+     * @returns res.send(results)
+     */
     async update(req: Request, res: Response) {
-        const { id } = req.body
+        const { idCandidate } = req.params
 
         try {
-            const candidate = await candidateRepository.findOneBy({ id: Number(id) })
+            const candidate = await candidateRepository.findOneBy({ id: Number(idCandidate) })
             if (!candidate) {
-                return res.status(404).json({ message: 'Não existe nenhum candidato com esse email cadastrado' })
+                return res.status(404).json({ message: 'Não foi localizado nenhum registro.' })
             }
             candidateRepository.merge(candidate, req.body)
             const results = await candidateRepository.save(candidate)
@@ -79,25 +105,45 @@ export class CandidateController {
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Sever Error' })
-
         }
     }
 
-    /******************************* DELETAR *******************************/
+    /**
+     * Tem por finalidade excluir um candidato que ainda não tenha participado de nenhuma
+     * entrevista.
+     * @param idCandidate Id do Candidato
+     * @param req request
+     * @param res response
+     * @returns 
+     */
     async delete(req: Request, res: Response) {
         const { idCandidate } = req.params
 
+        const [candidateInterviews, candidateInterviewsCount] = await interviewRepository.findAndCount({
+            relations: {
+                candidate: true,
+            },
+            where: {
+                candidate: {
+                    id: Number(idCandidate)
+                },
+            },
+        })
         try {
-            const candidate = await candidateRepository.findOneBy({
-                id: Number(idCandidate),
-            })
+            if (candidateInterviewsCount === 0) {
+                const candidate = await candidateRepository.findOneBy({
+                    id: Number(idCandidate),
+                })
 
-            if (!candidate) {
-                return res.status(404).json({ message: 'Candidato não foi encontrado.' })
+                if (!candidate) {
+                    return res.status(404).json({ message: 'Candidato não foi encontrado.' })
+                }
+
+                const results = await candidateRepository.remove(candidate)
+                return res.status(200).json({ message: 'O candidato foi removido com sucesso.' })
+            } else {
+                return res.status(404).json({ message: 'Não é possível remover esse candidato' })
             }
-
-            const results = await candidateRepository.remove(candidate)
-            return res.send(results)
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Sever Error' })

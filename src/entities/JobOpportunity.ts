@@ -24,23 +24,20 @@ export class JobOpportunity {
     @Column({ type: 'date', nullable: true })
     closingDate: Date
 
-    @CreateDateColumn({ name: 'create_At' })
+    @CreateDateColumn({ name: 'create_At', select: false })
     createAt: Date
 
-    @UpdateDateColumn({ name: 'update_At' })
+    @UpdateDateColumn({ name: 'update_At', select: false })
     updateAt: Date
 
     @ManyToOne(() => Department, department => department.jobopportunities)
-    @JoinTable()
     @JoinColumn({ name: "FK_departmentId" })
     department: Department;
 
-    @OneToMany(() => JobOpportunity_Skill, jobopportunity_Skill => jobopportunity_Skill.jobopportunity)
-    @JoinTable()
+    @OneToMany(() => JobOpportunity_Skill, jobopportunity_Skill => jobopportunity_Skill.jobopportunity/*, { eager: true }*/)
     jobopportunitySkills: JobOpportunity_Skill[]
 
     @ManyToOne(() => User, user => user.jobopportunities)
-    @JoinTable()
     @JoinColumn({ name: "FK_userId" })
     user: User
 

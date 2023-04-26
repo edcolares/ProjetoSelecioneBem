@@ -9,15 +9,15 @@ export class Candidate {
     @Column({ type: 'varchar', length: 150 })
     name: string
 
-    @Column({ type: 'varchar', length: 150, unique:true })
+    @Column({ type: 'varchar', length: 150, unique: true })
     email: string
 
-    @CreateDateColumn({ name: 'create_At' })
+    @CreateDateColumn({ name: 'create_At', select: false })
     createAt: Date
 
-    @UpdateDateColumn({ name: 'update_At' })
+    @UpdateDateColumn({ name: 'update_At', select: false })
     updateAt: Date
-    
+
     @OneToMany(() => Interview, interview => interview.candidate)
     interviews: Interview[];
 }

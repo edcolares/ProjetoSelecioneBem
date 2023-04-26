@@ -22,24 +22,24 @@ export class Interview {
     @Column({ type: 'time' })
     duration: Timestamp
 
-    @Column({ type: 'int' })
+    @Column({ type: 'int', default: 0 })
     totalScore: number
 
     @Column({ type: 'varchar', length: 1024, nullable: true })
     note: string
 
-    @CreateDateColumn({ name: 'create_At' })
+    @CreateDateColumn({ name: 'create_At', select: false })
     createAt: Date
 
-    @UpdateDateColumn({ name: 'update_At' })
+    @UpdateDateColumn({ name: 'update_At', select: false })
     updateAt: Date
 
-    @ManyToOne(() => Candidate, candidate => candidate.interviews, { eager: true })
+    @ManyToOne(() => Candidate, candidate => candidate.interviews/*, { eager: true }*/)
     @JoinTable()
     @JoinColumn({ name: 'FK_candidateId' })
     candidate: Candidate
 
-    @OneToMany(() => Rating, rating => rating.interview, { eager: true })
+    @OneToMany(() => Rating, rating => rating.interview/*, { eager: true }*/)
     ratings: Rating[]
 
     @ManyToOne(() => User, user => user.interviews)

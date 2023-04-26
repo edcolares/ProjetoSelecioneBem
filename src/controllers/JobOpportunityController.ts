@@ -2,23 +2,31 @@ import { Request, Response } from "express";
 import { userRepository } from "../repositories/userRepository";
 import { jobopportunityRepository } from "../repositories/jobopportunityRepository";
 import { departmentRepository } from "../repositories/departmentRepository";
-import { interviewRepository } from "../repositories/interviewRepository";
+import { IsNull } from "typeorm";
 
 export class JobOpportunityController {
 
-    /** Cria uma nova entrevista */
+    /**
+     * Essa função cria e salva uma nova oportunidade de emprego no banco de dados a partir
+     * dos dados enviados na requisição HTTP. Se ocorrer algum erro, a função retorna um 
+     * erro 500. Em caso de sucesso, retorna a nova oportunidade de emprego criada.
+     * @param req.body { title, level, openingDate, expectedDate, FK_departmentId, FK_userId }
+     * @param req Request
+     * @param res Response
+     * @returns JSON
+     */
     async create(req: Request, res: Response) {
         const { title, level, openingDate, expectedDate, FK_departmentId, FK_userId } = req.body
 
         if (!title || !level || !openingDate || !expectedDate || !FK_departmentId || !FK_userId) {
-            return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' })
+            return res.status(400).json({ message: 'Campos não foram preenchidos corretamente.' })
         }
 
         const department = await departmentRepository.findOneBy({ id: Number(FK_departmentId) })
         const user = await userRepository.findOneBy({ id: Number(FK_userId) })
 
         if (!department || !user) {
-            return res.status(404).json({ message: 'Alguma chave estrangeira não existe' })
+            return res.status(404).json({ message: 'Alguma chave estrangeira não foi localizada.' })
         }
 
         if (user.isActive == false) {
@@ -28,7 +36,7 @@ export class JobOpportunityController {
         try {
             const newJobOpportunity = jobopportunityRepository.create({ title, level, openingDate, expectedDate, department, user })
             await jobopportunityRepository.save(newJobOpportunity)
-            return res.status(201).json(newJobOpportunity)
+            return res.status(200).json(newJobOpportunity)
 
         } catch (error) {
             console.log(error)
@@ -37,52 +45,110 @@ export class JobOpportunityController {
         }
     }
 
-
+    /**
+     * Function que irá listar todas as jobopportunity e jobopportunity_skill dela
+     * através do ID de um usuário
+     * @param req Request
+     * @param res Response
+     * @returns JSON
+     */
     async listByUser(req: Request, res: Response) {
         const { idUser } = req.params
-        const num = Number(idUser)
 
-        const jobopportunityAll = await jobopportunityRepository
-            .createQueryBuilder('jobopportunity')
-            .leftJoinAndSelect('jobopportunity.user', 'user')
-            .leftJoinAndSelect('jobopportunity.department', 'department')
-            .where('user.id = :id', { id: num })
-            .getMany();
+        if (!Number.isInteger(Number(idUser))) {
+            return res.status(400).json({ message: 'Verifique o id do usuário, tipo de dado incorreto.' })
+        }
 
-        res.json(jobopportunityAll)
-
+        try {
+            const JobAll = await jobopportunityRepository.find({
+                relations: {
+                    department: true,
+                    jobopportunitySkills: {
+                        skill: true,
+                    },
+                },
+                where: {
+                    user: {
+                        id: Number(idUser),
+                    }
+                },
+            })
+            return res.status(200).json(JobAll)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
     }
 
-    /** Buscar todas INTERVIEWS de uma determinada JOBOPPORTUNITY
-     *  Parametros:     idJobOpportunity = Identifica o Id da JOBOPPORTUNITY
+    /**
+     * Busca todas as INTERVIWES de uma determinada JOBOPPORTUNITY
+     * @param req.params idJobOpportunity
+     * @param req request
+     * @param res response
+     * @returns JSON
      */
     async getInterviewsByJobOpportunity(req: Request, res: Response) {
         const { idJobOpportunity } = req.params
-        try {
-            const interviews = await interviewRepository
-                .createQueryBuilder('interview')
-                .leftJoinAndSelect('interview.jobopportunity', 'jobopportunity')
-                .leftJoinAndSelect('interview.candidate', 'candidate')
-                .where('jobopportunity.id = :id', { id: idJobOpportunity })
-                .getMany();
+        const { idUser } = req.body
 
-            res.json(interviews)
+        if (!Number.isInteger(Number(idJobOpportunity)) || !Number.isInteger(Number(idUser))) {
+            return res.status(200).json({ message: 'Verique as chaves estrangeiras' })
+        }
+
+        try {
+
+            const interviewsByUser = await jobopportunityRepository.find({
+                relations: {
+                    interviews: {
+                        candidate: true,
+                        ratings: {
+                            skill: true,
+                        },
+                    },
+                    department: true,
+                },
+                where: {
+                    id: Number(idJobOpportunity),
+                    user: {
+                        id: Number(idUser)
+                    },
+                }
+            })
+            return res.status(200).json(interviewsByUser)
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Server Error' })
         }
-
     }
 
-    /** Listar candidatos por email */
+    /**
+     * Busca todas as JOBOPPORTUNITY abertas de um User
+     * @param req Request
+     * @param res Response
+     * @returns JSON
+     */
     async find(req: Request, res: Response) {
+        const { idUser } = req.body
+        if (!idUser || !Number.isInteger(Number(idUser))) {
+            return res.status(404).json({ message: 'Houve algum problema com a chave estrangeira passad por parametro.' })
+        }
 
         try {
-            const jobopportunity = await jobopportunityRepository.find()
-            if (!jobopportunity) {
-                return res.status(404).json({ message: 'Não existe oportunidades cadastradas' })
-            }
-            res.json(jobopportunity)
+            const jobopportunityOpenByUser = await jobopportunityRepository.find({
+                relations: {
+                    department: true,
+                    jobopportunitySkills: {
+                        skill: true,
+                    },
+                },
+                where: {
+                    closingDate: IsNull(),
+                    user: {
+                        id: Number(idUser),
+                    }
+                }
+            })
+            return res.status(200).json(jobopportunityOpenByUser)
 
         } catch (error) {
             console.log(error)
@@ -91,18 +157,45 @@ export class JobOpportunityController {
     }
 
 
-    /** Desenvolver */
+    /**
+     * Essa função tem a finalidade de atualizar dados de uma JOBOPPORTUNITY, 
+     * desde que seja o mesmo usuário que a criou
+     * @param req Request
+     * @param res Response
+     * @returns JSON
+     */
     async update(req: Request, res: Response) {
-        const { id } = req.body
+        const { idJobOpportunity } = req.params
+        const { title, level, openingDate, expectedDate, closingDate, FK_departmentId, FK_userId } = req.body
+
+        if (!FK_userId || !Number.isInteger(Number(FK_userId))) {
+            return res.status(200).json({ message: 'O usuário tem que ser identificado.' })
+        }
+
+        if (!idJobOpportunity || !Number.isInteger(Number(idJobOpportunity))) {
+            return res.status(200).json({ message: 'Algum problema no parametro Id da oportunidade.' })
+        }
 
         try {
-            const jobopportunity = await jobopportunityRepository.findOneBy({ id: Number(id) })
-            if (!jobopportunity) {
+            const objJobOpportunity = await jobopportunityRepository.findOne({
+                relations: {
+                    user: true,
+                },
+                where: {
+                    id: Number(idJobOpportunity),
+                },
+            })
+            if (!objJobOpportunity) {
                 return res.status(404).json({ message: 'Não existe oportunidades cadastradas' })
             }
-            jobopportunityRepository.merge(jobopportunity, req.body)
-            const results = await jobopportunityRepository.save(jobopportunity)
-            return res.send(results)
+            if (objJobOpportunity.user.id === Number(FK_userId)) {
+                jobopportunityRepository.merge(objJobOpportunity, req.body)
+                const results = await jobopportunityRepository.save(objJobOpportunity)
+                return res.status(200).json(results)
+            } else {
+                return res.status(404).json({ message: 'Somente o mesmo usuário poderá realizar a manutenção dos dados.' })
+            }
+
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Sever Error' })
@@ -110,7 +203,15 @@ export class JobOpportunityController {
         }
     }
 
-    /******************************* DELETAR *******************************/
+    /**
+     * Esta função deleta uma oportunidade de emprego do banco de dados. Ela recebe um 
+     * ID de oportunidade na requisição HTTP, verifica se a oportunidade existe e, se 
+     * existir, remove-a do banco de dados. Em caso de sucesso, a função retorna o 
+     * resultado da operação, caso contrário, retorna um erro.
+     * @param req Request
+     * @param res Response
+     * @returns JSON
+     */
     async delete(req: Request, res: Response) {
         const { idJobOpportunity } = req.params
 
@@ -124,7 +225,7 @@ export class JobOpportunityController {
             }
 
             const results = await jobopportunityRepository.remove(jobopportunity)
-            return res.send(results)
+            return res.status(200).json(results)
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Sever Error' })

@@ -11,16 +11,14 @@ export class Rating {
     @Column({ type: 'int', comment: "" })
     score: number
 
-    @CreateDateColumn({ name: 'create_At' })
+    @CreateDateColumn({ name: 'create_At' , select: false})
     createAt: Date
 
     @ManyToOne(() => Interview, (interview) => interview.ratings, { onDelete: "CASCADE" })
-    @JoinTable()
     @JoinColumn({ name: "FK_interviewId" })
     interview: Interview
 
-    @ManyToOne(() => Skill, (skill) => skill.ratings, { eager: true })
-    @JoinTable()
+    @ManyToOne(() => Skill, (skill) => skill.ratings)
     @JoinColumn({ name: "FK_skillId" })
     skill: Skill
 }

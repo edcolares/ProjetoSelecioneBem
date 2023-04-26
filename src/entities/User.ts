@@ -21,13 +21,13 @@ export class User {
     @Column({ type: 'boolean', default: 'true' })
     isActive: boolean
 
-    @CreateDateColumn({ name: 'create_At' })
+    @CreateDateColumn({ name: 'create_At', select: false })
     createAt: Date
 
-    @UpdateDateColumn({ name: 'update_At' })
+    @UpdateDateColumn({ name: 'update_At', select: false })
     updateAt: Date
 
-    @DeleteDateColumn({ name: 'remove_At' })
+    @DeleteDateColumn({ name: 'remove_At', select: false })
     removeAt: Date
 
     @BeforeInsert()
