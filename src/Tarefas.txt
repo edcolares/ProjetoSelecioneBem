@@ -55,8 +55,8 @@ JobOpportunity
 > O metodo UPDATE da classe JOBOPPORTUNITY_SKILL concluída (Validando se o número é inteiro)
 
 
-    /** To do: update */
-    /** To do: listarPorDatas */
-    /** To do: listarPorDepartamentos */
-    /** To do: listarPorDatas */
-    /** To do: listarOportunidadesAbertas(sem data de encerramento) */
+******** 25/04/2023 ********
+> Revisei todos as classes e metodos, inseri "docstring" ou "documentação da função" em todas elas
+> Foi ajustado o código de status de todos os retornos
+> Foi postado no GIT até agora o principal COMMIT
+> No momento está faltando apenas a classe RATING que precisa ainda uns ajustes, as demais não serão mais alteradas

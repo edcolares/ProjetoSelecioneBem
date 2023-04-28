@@ -38,7 +38,11 @@ export class SkillController {
     async find(req: Request, res: Response) {
 
         try {
-            const skill = await skillRepository.find()
+            const skill = await skillRepository.find({
+                order: {
+                    name: "ASC",
+                },
+            })
             if (!skill) {
                 return res.status(404).json({ message: 'Não possui nenhuma skill cadastrada.' })
             }
