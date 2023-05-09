@@ -10,20 +10,20 @@ export class JobOpportunityController {
      * Essa função cria e salva uma nova oportunidade de emprego no banco de dados a partir
      * dos dados enviados na requisição HTTP. Se ocorrer algum erro, a função retorna um 
      * erro 500. Em caso de sucesso, retorna a nova oportunidade de emprego criada.
-     * @param req.body { title, level, openingDate, expectedDate, FK_departmentId, FK_userId }
+     * @param req.body { title, level, openingDate, expectedDate, departmentId, useId }
      * @param req Request
      * @param res Response
      * @returns JSON
      */
     async create(req: Request, res: Response) {
-        const { title, level, openingDate, expectedDate, FK_departmentId, FK_userId } = req.body
+        const { title, level, openingDate, expectedDate, departmentId, useId } = req.body
 
-        if (!title || !level || !openingDate || !expectedDate || !FK_departmentId || !FK_userId) {
+        if (!title || !level || !openingDate || !expectedDate || !departmentId || !useId) {
             return res.status(400).json({ message: 'Campos não foram preenchidos corretamente.' })
         }
 
-        const department = await departmentRepository.findOneBy({ id: Number(FK_departmentId) })
-        const user = await userRepository.findOneBy({ id: Number(FK_userId) })
+        const department = await departmentRepository.findOneBy({ id: Number(departmentId) })
+        const user = await userRepository.findOneBy({ id: Number(useId) })
 
         if (!department || !user) {
             return res.status(404).json({ message: 'Alguma chave estrangeira não foi localizada.' })
@@ -128,7 +128,8 @@ export class JobOpportunityController {
      * @returns JSON
      */
     async find(req: Request, res: Response) {
-        const { idUser } = req.body
+        const { idUser } = req.params
+        
         if (!idUser || !Number.isInteger(Number(idUser))) {
             return res.status(404).json({ message: 'Houve algum problema com a chave estrangeira passad por parametro.' })
         }
@@ -166,9 +167,9 @@ export class JobOpportunityController {
      */
     async update(req: Request, res: Response) {
         const { idJobOpportunity } = req.params
-        const { title, level, openingDate, expectedDate, closingDate, FK_departmentId, FK_userId } = req.body
+        const { title, level, openingDate, expectedDate, closingDate, departmentId, useId } = req.body
 
-        if (!FK_userId || !Number.isInteger(Number(FK_userId))) {
+        if (!useId || !Number.isInteger(Number(useId))) {
             return res.status(200).json({ message: 'O usuário tem que ser identificado.' })
         }
 
@@ -188,7 +189,7 @@ export class JobOpportunityController {
             if (!objJobOpportunity) {
                 return res.status(404).json({ message: 'Não existe oportunidades cadastradas' })
             }
-            if (objJobOpportunity.user.id === Number(FK_userId)) {
+            if (objJobOpportunity.user.id === Number(useId)) {
                 jobopportunityRepository.merge(objJobOpportunity, req.body)
                 const results = await jobopportunityRepository.save(objJobOpportunity)
                 return res.status(200).json(results)

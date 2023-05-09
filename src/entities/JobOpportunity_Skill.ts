@@ -8,7 +8,7 @@ export class JobOpportunity_Skill {
 	@PrimaryGeneratedColumn('increment')
 	id: number
 
-	@Column({ type: 'int' })
+	@Column({ type: 'int' , default: 0})
 	weightingFactor: number
 
 	@CreateDateColumn({ name: 'create_At', select: false })

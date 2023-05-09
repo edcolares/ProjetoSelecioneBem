@@ -37,7 +37,14 @@ export class DepartmentController {
     async find(req: Request, res: Response) {
 
         try {
-            const department = await departmentRepository.findBy({ isActive: true })
+            const department = await departmentRepository.find({
+                where: {
+                    isActive: true,
+                },
+                order: {
+                    name: "ASC",
+                }
+            })
             if (!department) {
                 return res.status(404).json({ message: 'Não possui nenhum departamento cadastrado' })
             }

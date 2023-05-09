@@ -38,14 +38,25 @@ export class CandidateController {
      * @returns Status por JSON
      */
     async findByEmail(req: Request, res: Response) {
-        const { email } = req.body
+        const { email } = req.params
+
+        console.log("JSON Body: ", JSON.stringify(req.body));
+        console.log("Email: ", email);
+
 
         try {
+
+            // if (email === '') {
+            //     return res.status(500).json({ message: 'O campo e-mail não foi preenchido corretamente' })
+            // }
+
             const candidate = await candidateRepository.findOneBy({ email: email })
+            console.log("Valor de candidate apos findOneBy: ", JSON.stringify(candidate));
+
             if (!candidate) {
                 return res.status(404).json({ message: 'Não existe nenhum candidato com esse email cadastrado' })
             }
-            res.json(candidate)
+            return res.status(201).json(candidate)
 
         } catch (error) {
             console.log(error)

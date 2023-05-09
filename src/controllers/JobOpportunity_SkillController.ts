@@ -6,7 +6,7 @@ import { Skill } from "../entities/Skill"
 import { JobOpportunity_Skill } from "../entities/JobOpportunity_Skill"
 import { Interview } from "../entities/Interview"
 import { Rating } from "../entities/Rating"
-import { JobOpportunity } from "../entities/JobOpportunity"
+import { TreeLevelColumn } from "typeorm"
 
 
 export class JobOpportunity_SkillController {
@@ -17,23 +17,23 @@ export class JobOpportunity_SkillController {
      */
     async create(req: Request, res: Response) {
 
-        const { weightingFactor, FK_skillId } = req.body
+        const { skillId } = req.body
         const { idJobOpportunity } = req.params
 
-        if (!weightingFactor || !FK_skillId || !idJobOpportunity) {
+        if (!skillId || !idJobOpportunity) {
             return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' })
         }
 
         const jobOpportunity = await jobopportunityRepository.findOneBy({ id: Number(idJobOpportunity) })
-        const skillId = await skillRepository.findOneBy({ id: Number(FK_skillId) })
+        const skillFind = await skillRepository.findOneBy({ id: Number(skillId) })
 
-        if (!jobOpportunity || !skillId) {
+        if (!jobOpportunity || !skillFind) {
             return res.status(404).json({ message: 'A oportunidade de emprego ou a skill já deve estar cadastrada, revise.' })
         }
 
 
         try {
-            const newJobOpportunity_Skill = jobopportunity_skillRepository.create({ weightingFactor, jobopportunity: jobOpportunity, skill: skillId })
+            const newJobOpportunity_Skill = jobopportunity_skillRepository.create({ jobopportunity: jobOpportunity, skill: skillId })
             await jobopportunity_skillRepository.save(newJobOpportunity_Skill)
             return res.status(201).json(newJobOpportunity_Skill)
         } catch (error) {
@@ -141,4 +141,113 @@ export class JobOpportunity_SkillController {
 
         }
     }
+
+    async findByIdofJobOpportunitySkill(req: Request, res: Response) {
+        const { idJobOpportunity } = req.params
+        try {
+            const find = await jobopportunity_skillRepository.find({
+                relations: {
+                    skill: true,
+                },
+                where: {
+                    jobopportunity: {
+                        id: Number(idJobOpportunity),
+                    }
+                },
+                order: {
+                    skill: {
+                        type: 'ASC',
+                        name: 'ASC',
+                    }
+                }
+            })
+            return res.status(200).json(find)
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+    /**
+     * Tem por objetivo contar quantas vezes cada habilidade aparece nos registros,
+     * agrupa por nome e as ordena pelo número de ocorrências em ordem decrescente.
+     * Foi limitado a 10 habilidades mais usadas.
+     * @param req None
+     * @param res JSON
+     * @returns 
+     */
+    async getTop10(req: Request, res: Response) {
+        try {
+            const results = await jobopportunity_skillRepository
+                .createQueryBuilder("j")
+                .select("s.name, COUNT(*) AS count")
+                .leftJoin(Skill, "s", 'j."FK_skillId" = s.id')
+                .groupBy("s.name")
+                .orderBy("count", "DESC")
+                .limit(10)
+                .getRawMany();
+            return res.status(200).json(results);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+
+    async getSoftVSHard(req: Request, res: Response) {
+        try {
+            // const results = await jobopportunity_skillRepository
+            //     .createQueryBuilder("j")
+            //     .select('s.type, COUNT(*) AS count')
+            //     .leftJoin(Skill, "s", 'j."FK_skillId" = s.id')
+            //     .groupBy('s.type')
+            //     .orderBy('count', 'DESC')
+            //     .getRawMany();
+
+            const results = await skillRepository
+                .createQueryBuilder()
+                .select("skill.type", "type")
+                .addSelect("COUNT(*)", "count")
+                .from(JobOpportunity_Skill, "jobopportunity_skill")
+                .innerJoin("jobopportunity_skill.skill", "skill")
+                .groupBy("skill.type")
+                .orderBy("count", "DESC")
+                .getRawMany();
+
+
+            // .createQueryBuilder("j")
+            // .innerJoinAndSelect("j.skill", "s")
+            // .select("s.type", "type")
+            // .addSelect("COUNT(*)", "count")
+            // .groupBy("s.type")
+            // .orderBy("count", "DESC")
+            // .getRawMany();
+
+            // .createQueryBuilder('j')
+            // .select('s.type', 'type')
+            // .addSelect('COUNT(*)', 'count')
+            // .innerJoin(`${Number("j.FK_skillId")}`, `${Number("s.id")}`)
+            // .groupBy('s.type')
+            // .orderBy('count', 'DESC');
+
+            // const count = await dataSource
+            //     .getRepository(User)
+            //     .createQueryBuilder("user")
+            //     .where("user.name = :name", { name: "Timber" })
+            //     .getCount()
+
+            return res.status(200).json(results);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
 }
+    /**
+* Tem por objetivo contar quantas vezes cada habilidade aparece nos registros,
+* agrupa por nome e as ordena pelo número de ocorrências em ordem decrescente.
+* Foi limitado a 10 habilidades mais usadas.
+* @param req None
+* @param res JSON
+* @returns 
+*/

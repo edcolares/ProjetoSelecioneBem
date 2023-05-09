@@ -20,7 +20,7 @@ export class InterviewController {
         if (!startDate || !finishDate || !duration || !totalScore || !FK_candidateId || !FK_userId || !FK_jobopportunityId) {
             return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' })
         }
-        if (Number.isInteger(Number(FK_candidateId)) || Number.isInteger(Number(FK_userId)) || Number.isInteger(Number(FK_jobopportunityId))) {
+        if (!Number.isInteger(Number(FK_candidateId)) || !Number.isInteger(Number(FK_userId)) || !Number.isInteger(Number(FK_jobopportunityId))) {
             return res.status(404).json({ message: 'Um dos campos de chave estrangeira não contem um número' })
         }
 

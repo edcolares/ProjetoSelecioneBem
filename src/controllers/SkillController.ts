@@ -40,6 +40,7 @@ export class SkillController {
         try {
             const skill = await skillRepository.find({
                 order: {
+                    type: "ASC",
                     name: "ASC",
                 },
             })
