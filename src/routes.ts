@@ -53,7 +53,8 @@ routes.get('/interview/:idUser', interview.getInterviewsBetweenDates);
 
 /* Rotas para JOBOPPORTUNITY */
 routes.post('/jobopportunity', jobopportunity.create);
-routes.get('/jobopportunity/:idUser', jobopportunity.listByUser);
+routes.get('/jobopportunity/:idJobOpportunity', jobopportunity.getJobOpportunityById);
+routes.get('/jobopportunity/user/:idUser', jobopportunity.listByUser);
 routes.get('/jobopportunities/:idJobOpportunity', jobopportunity.getInterviewsByJobOpportunity)
 routes.get('/jobopportunity/find/:idUser', jobopportunity.find);
 routes.put('/jobopportunity/:idJobOpportunity', jobopportunity.update);

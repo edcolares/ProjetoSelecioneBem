@@ -129,7 +129,7 @@ export class JobOpportunityController {
      */
     async find(req: Request, res: Response) {
         const { idUser } = req.params
-        
+
         if (!idUser || !Number.isInteger(Number(idUser))) {
             return res.status(404).json({ message: 'Houve algum problema com a chave estrangeira passad por parametro.' })
         }
@@ -151,6 +151,30 @@ export class JobOpportunityController {
             })
             return res.status(200).json(jobopportunityOpenByUser)
 
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+    async getJobOpportunityById(req: Request, res: Response) {
+        const { idJobOpportunity } = req.params
+        if (!idJobOpportunity || !Number.isInteger(Number(idJobOpportunity))) {
+            return res.status(404).json({ message: 'A oportunidade de emprego não foi localizada!' })
+        }
+        try {
+            const jobOpportunityById = await jobopportunityRepository.findOne({
+                relations: {
+                    department: true,
+                    jobopportunitySkills: {
+                        skill: true,
+                    },
+                },
+                where: {
+                    id: Number(idJobOpportunity),
+                },
+            })
+            return res.status(200).json(jobOpportunityById);
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Server Error' })
