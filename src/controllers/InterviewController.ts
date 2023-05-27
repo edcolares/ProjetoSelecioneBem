@@ -9,17 +9,20 @@ export class InterviewController {
 
     /**
      * Responsável por realizar a criação de novo registro para a entidade INTERVIEW
-     * @param req.body startDate, finishDate, delay, duration, totalScore, note, FK_candidateId, FK_userId, FK_jobopportunityId
+     * @param req.body startDate, finishDate, isDelayed, duration, totalScore, note, FK_candidateId, FK_userId, FK_jobopportunityId
      * @param req Request
      * @param res Response
      * @returns JSON
      */
     async create(req: Request, res: Response) {
-        const { startDate, finishDate, delay, duration, totalScore, note, FK_candidateId, FK_userId, FK_jobopportunityId } = req.body
+        const { startDate, finishDate, isDelayed, duration, totalScore, note, FK_candidateId, FK_userId, FK_jobopportunityId } = req.body
+        console.log(req.body);
 
-        if (!startDate || !finishDate || !duration || !totalScore || !FK_candidateId || !FK_userId || !FK_jobopportunityId) {
+        if (!startDate || !finishDate || !duration || !FK_candidateId || !FK_userId || !FK_jobopportunityId) {
             return res.status(400).json({ message: 'Campos não foram preenchidos corretamente' })
         }
+
+
         if (!Number.isInteger(Number(FK_candidateId)) || !Number.isInteger(Number(FK_userId)) || !Number.isInteger(Number(FK_jobopportunityId))) {
             return res.status(404).json({ message: 'Um dos campos de chave estrangeira não contem um número' })
         }
@@ -32,7 +35,7 @@ export class InterviewController {
         }
 
         try {
-            const newInterview = interviewRepository.create({ startDate, finishDate, delay, duration, totalScore, note, candidate, user, jobopportunity })
+            const newInterview = interviewRepository.create({ startDate, finishDate, isDelayed, duration, totalScore, note, candidate, user, jobopportunity })
             await interviewRepository.save(newInterview)
             return res.status(201).json(newInterview)
 

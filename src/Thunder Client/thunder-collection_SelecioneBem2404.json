@@ -343,7 +343,7 @@
             "params": [],
             "body": {
                 "type": "json",
-                "raw": "{\n  \"startDate\": \"2023-03-11 10:03:03\",\n  \"finishDate\": \"2023-03-11 10:04:04\",\n  \"delay\": false,\n  \"duration\": \"01:10:05\",\n  \"totalScore\": 180,\n  \"note\": \"Excelente entrevista\",\n  \"FK_candidateId\": 2,\n  \"FK_userId\": 2,\n  \"FK_jobopportunityId\": 1\n}",
+                "raw": "{\n  \"startDate\": \"2023-03-11 10:03:03\",\n  \"finishDate\": \"2023-03-11 10:04:04\",\n  \"isDelayed\": false,\n  \"duration\": \"01:10:05\",\n  \"totalScore\": 180,\n  \"note\": \"Excelente entrevista\",\n  \"FK_candidateId\": 2,\n  \"FK_userId\": 2,\n  \"FK_jobopportunityId\": 1\n}",
                 "form": []
             },
             "tests": []

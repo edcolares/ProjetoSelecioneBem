@@ -89,16 +89,22 @@ export class JobOpportunityController {
      */
     async getInterviewsByJobOpportunity(req: Request, res: Response) {
         const { idJobOpportunity } = req.params
-        const { idUser } = req.body
+        console.log(idJobOpportunity);
 
-        if (!Number.isInteger(Number(idJobOpportunity)) || !Number.isInteger(Number(idUser))) {
+
+        if (!Number.isInteger(Number(idJobOpportunity))) {
             return res.status(200).json({ message: 'Verique as chaves estrangeiras' })
         }
+        console.log('Chegou linha 98');
 
         try {
 
-            const interviewsByUser = await jobopportunityRepository.find({
+            const jobOpportunityData = await jobopportunityRepository.find({
                 relations: {
+                    jobopportunitySkills:
+                    {
+                        skill: true,
+                    },
                     interviews: {
                         candidate: true,
                         ratings: {
@@ -109,12 +115,25 @@ export class JobOpportunityController {
                 },
                 where: {
                     id: Number(idJobOpportunity),
-                    user: {
-                        id: Number(idUser)
+                },
+                order: {
+                    interviews: {
+                        totalScore: "DESC",
+                        ratings: {
+                            skill: {
+                                name: "ASC",
+                            }
+                        }
                     },
+                    jobopportunitySkills: {
+                        skill: {
+                            name: "ASC",
+                        }
+                    },
+                    
                 }
             })
-            return res.status(200).json(interviewsByUser)
+            return res.status(200).json(jobOpportunityData)
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Server Error' })

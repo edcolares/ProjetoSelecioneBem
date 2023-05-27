@@ -17,7 +17,7 @@ export class Interview {
     finishDate: Date
 
     @Column({ type: 'boolean' })
-    delay: boolean
+    isDelayed: boolean
 
     @Column({ type: 'time' })
     duration: Timestamp

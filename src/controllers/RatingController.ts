@@ -28,15 +28,20 @@ export class RatingController {
                 return res.status(400).json({ message: 'Preencha o campo score com um número inteiro.' })
             }
 
-            const objInterview = await interviewRepository.findOneBy({ id: Number(FK_interviewId) })
-            if (!objInterview) {
+            const interview = await interviewRepository.findOneBy({ id: Number(FK_interviewId) })
+            if (!interview) {
                 return res.status(400).json({ message: 'Não foi localizado nenhuma entrevista' })
             }
 
-            const objSkill = await skillRepository.findOneBy({ id: Number(FK_skillId) })
-            if (!objSkill) {
+            const skill = await skillRepository.findOneBy({ id: Number(FK_skillId) })
+            if (!skill) {
                 return res.status(400).json({ message: 'Não foi localizado nenhuma skill' })
             }
+
+            const newRating = ratingRepository.create({ score, interview, skill })
+            await ratingRepository.save(newRating)
+            return res.status(201).json(newRating)
+
 
             // const queryBuilder = await jobopportunity_skillRepository
             //     .createQueryBuilder('jos')
@@ -50,51 +55,51 @@ export class RatingController {
             /**
              * Essa consulta aqui está funcionando porém não aparece a SKILL avaliada
              */
-            const seraquetem = await jobopportunityRepository.find({
-                select: {
+            // const seraquetem = await jobopportunityRepository.find({
+            //     select: {
 
-                    id: true,
-                    title: true,
+            //         id: true,
+            //         title: true,
 
-                    jobopportunitySkills: {
-                        id: true,
-                        weightingFactor: true,
-                        skill: {
-                            id: true,
-                            name: true,
-                        },
-                    },
-                    interviews: {
-                        id: true,
-                        candidate: {
-                            name: true,
-                        },
-                    },
-                },
-                relations: {
-                    jobopportunitySkills: {
-                        skill: {
-                            ratings: true,
-                        },
-                    },
-                    interviews: {
-                        ratings: true,
-                        candidate: true,
-                    },
+            //         jobopportunitySkills: {
+            //             id: true,
+            //             weightingFactor: true,
+            //             skill: {
+            //                 id: true,
+            //                 name: true,
+            //             },
+            //         },
+            //         interviews: {
+            //             id: true,
+            //             candidate: {
+            //                 name: true,
+            //             },
+            //         },
+            //     },
+            //     relations: {
+            //         jobopportunitySkills: {
+            //             skill: {
+            //                 ratings: true,
+            //             },
+            //         },
+            //         interviews: {
+            //             ratings: true,
+            //             candidate: true,
+            //         },
 
-                },
-                where: {
-                    interviews: {
-                        id: Number(FK_interviewId),
-                    },
-                    jobopportunitySkills: {
-                        skill: {
-                            id: Number(FK_skillId),
-                        },
-                    },
-                },
-            })
-            return res.json(seraquetem)
+            //     },
+            //     where: {
+            //         interviews: {
+            //             id: Number(FK_interviewId),
+            //         },
+            //         jobopportunitySkills: {
+            //             skill: {
+            //                 id: Number(FK_skillId),
+            //             },
+            //         },
+            //     },
+            // })
+            // return res.json(seraquetem)
             // if (queryBuilder.length != 0) {
             //     const newRating = new Rating()
             //     newRating.score = score
