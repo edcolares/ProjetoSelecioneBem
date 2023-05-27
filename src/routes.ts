@@ -35,6 +35,7 @@ routes.delete('/user/:idUser', user.delete);
 /* Rotas para DEPARTMENT */
 routes.post('/department', department.create);
 routes.get('/department', department.find);
+routes.get('/department/statistics', department.getDepartmentStatistics);
 routes.put('/department/:idDepartment', department.update);
 routes.delete('department/:idDepartment', department.delete);
 

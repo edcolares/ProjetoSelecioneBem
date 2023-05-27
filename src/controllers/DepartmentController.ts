@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { departmentRepository } from "../repositories/departmentRepository";
+import { jobopportunityRepository } from "../repositories/jobopportunityRepository";
 
 export class DepartmentController {
 
@@ -104,6 +105,25 @@ export class DepartmentController {
         } catch (error) {
             console.log(error)
             return res.status(500).json({ message: 'Internal Sever Error' })
+        }
+    }
+
+
+    async getDepartmentStatistics(req: Request, res: Response) {
+        try {
+
+            const departmentStatistics = await departmentRepository
+                .createQueryBuilder("department")
+                .select("department.name", "name")
+                .addSelect("MAX(jobOpportunity.level)", "nivel")
+                .addSelect("COUNT(jobOpportunity.id)", "qtde_oportunidades")
+                .leftJoinAndSelect("department.jobopportunities", "jobOpportunity", "jobOpportunity.FK_departmentId = department.id")
+                .groupBy("department.name")
+                .getRawMany();
+            return res.status(200).json(departmentStatistics);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
         }
     }
 }
