@@ -36,6 +36,7 @@ routes.delete('/user/:idUser', user.delete);
 routes.post('/department', department.create);
 routes.get('/department', department.find);
 routes.get('/department/statistics', department.getDepartmentStatistics);
+routes.get('/department/opportunities/statistics', department.getDepartmentWithOpportunitiesOpenCloseStatistics);
 routes.put('/department/:idDepartment', department.update);
 routes.delete('department/:idDepartment', department.delete);
 
@@ -58,6 +59,9 @@ routes.get('/jobopportunity/:idJobOpportunity', jobopportunity.getJobOpportunity
 routes.get('/jobopportunity/user/:idUser', jobopportunity.listByUser);
 routes.get('/jobopportunity/report/:idJobOpportunity', jobopportunity.getInterviewsByJobOpportunity)
 routes.get('/jobopportunity/find/:idUser', jobopportunity.find);
+routes.get('/jobopportunity/statistics/vacancybyopportunity', jobopportunity.getVagasAbertasPorDepartamento);
+routes.get('/jobopportunity/statistics/allopportunities', jobopportunity.getJobOpportunitiesAllData);
+routes.get('/jobopportunity/statistics/globaljobopportunities', jobopportunity.getJobOpportunitiesGlobal);
 routes.put('/jobopportunity/:idJobOpportunity', jobopportunity.update);
 routes.delete('/jobopportunity/:idJobOpportunity', jobopportunity.delete);
 

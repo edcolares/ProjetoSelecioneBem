@@ -44,3 +44,4 @@ export class JobOpportunity {
     @OneToMany(() => Interview, interview => interview.jobopportunity)
     interviews: Interview[]
 }
+

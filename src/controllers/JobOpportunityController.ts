@@ -276,4 +276,74 @@ export class JobOpportunityController {
         }
     }
 
+    async getVagasAbertasPorDepartamento(req: Request, res: Response) {
+        try {
+
+            const jobOpportunityStatistics = await jobopportunityRepository
+                .createQueryBuilder("jobOpportunity")
+                .select("department.name", "name_department")
+                // .addSelect("CONCAT(EXTRACT(MONTH FROM jobOpportunity.openingDate), '-', EXTRACT(YEAR FROM jobOpportunity.openingDate))","month_year")
+                .addSelect("EXTRACT(MONTH FROM jobOpportunity.openingDate)", "month")
+                .addSelect("EXTRACT(YEAR FROM jobOpportunity.openingDate)", "year")
+                .addSelect("COUNT(jobOpportunity.id)", "vacancy_open")
+                .innerJoin("jobOpportunity.department", "department")
+                .groupBy("department.name, EXTRACT(MONTH FROM jobOpportunity.openingDate), EXTRACT(YEAR FROM jobOpportunity.openingDate)")
+                .orderBy("EXTRACT(YEAR FROM jobOpportunity.openingDate), EXTRACT(MONTH FROM jobOpportunity.openingDate), department.name")
+                .getRawMany();
+            return res.status(200).json(jobOpportunityStatistics);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+    /**
+     * Seleciona todas as entrevista e gera dados com relação a quaantidade total de oportunidades, oportunidade em aberto e 
+     * fechadas e as concluidas com atraso.
+     * @param req Request
+     * @param res Response
+     * @returns JSON com (open_opportunities, closed_opportunities, delayed_opportunities e all_opportunities)
+     */
+    async getJobOpportunitiesAllData(req: Request, res: Response) {
+        try {
+
+            const jobOpportunityStatistics = await jobopportunityRepository
+                .createQueryBuilder("jobOpportunity")
+                .select("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL THEN 1 END)", "open_opportunities")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NOT NULL THEN 1 END)", "closed_opportunities")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate  > jobOpportunity.expectedDate THEN 1 END)", "delayed_opportunities")
+                .addSelect("COUNT(jobOpportunity.id)", "all_opportunities")
+                .getRawMany();
+            return res.status(200).json(jobOpportunityStatistics);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+
+    /**
+ * Seleciona todas as entrevista e gera dados com relação a quantidade total de oportunidades, oportunidade em aberto e 
+ * fechadas e as fechadas com atraso.
+ * @param req Request
+ * @param res Response
+ * @returns JSON com (oportunidades_abertas_global, fechadas_prazo_global, fechadas_atraso_global e all_opportunities)
+ */
+    async getJobOpportunitiesGlobal(req: Request, res: Response) {
+        try {
+
+            const jobOpportunityStatistics = await jobopportunityRepository
+                .createQueryBuilder("jobOpportunity")
+                .select("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL THEN 1 END)", "oportunidades_abertas_global")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate <= jobOpportunity.expectedDate THEN 1 END)", "fechadas_prazo_global")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate > jobOpportunity.expectedDate THEN 1 END)", "fechadas_atraso_global")
+                .addSelect("COUNT(jobOpportunity.id)", "all_opportunities")
+                .getRawMany();
+            return res.status(200).json(jobOpportunityStatistics);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
 }

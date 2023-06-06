@@ -117,7 +117,7 @@ export class DepartmentController {
                 .select("department.name", "name")
                 .addSelect("MAX(jobOpportunity.level)", "nivel")
                 .addSelect("COUNT(jobOpportunity.id)", "qtde_oportunidades")
-                .leftJoinAndSelect("department.jobopportunities", "jobOpportunity", "jobOpportunity.FK_departmentId = department.id")
+                .leftJoin("department.jobopportunities", "jobOpportunity", "jobOpportunity.FK_departmentId = department.id")
                 .groupBy("department.name")
                 .getRawMany();
             return res.status(200).json(departmentStatistics);
@@ -126,4 +126,26 @@ export class DepartmentController {
             return res.status(500).json({ message: 'Internal Server Error' })
         }
     }
+
+    async getDepartmentWithOpportunitiesOpenCloseStatistics(req: Request, res: Response) {
+        try {
+
+            const departmentStatistics = await departmentRepository
+                .createQueryBuilder("department")
+                .select("department.name", "name")
+                .addSelect("MAX(jobOpportunity.level)", "nivel")
+                .addSelect("COUNT(jobOpportunity.id)", "qtde_oportunidades")
+                .addSelect("COUNT(case when jobOpportunity.closingDate is null then 1 end)", "open_opportunities")
+                .addSelect("COUNT(case when jobOpportunity.closingDate is not null then 1 end)","closed_opportunity")
+                .leftJoin("department.jobopportunities", "jobOpportunity", "jobOpportunity.FK_departmentId = department.id")
+                .groupBy("department.name")
+                .getRawMany();
+            return res.status(200).json(departmentStatistics);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
+
 }
