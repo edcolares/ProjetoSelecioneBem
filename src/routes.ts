@@ -7,6 +7,7 @@ import { InterviewController } from "./controllers/InterviewController";
 import { JobOpportunityController } from "./controllers/JobOpportunityController";
 import { JobOpportunity_SkillController } from "./controllers/JobOpportunity_SkillController";
 import { RatingController } from "./controllers/RatingController";
+import { authMiddleware } from "./middlewares/authMiddleware";
 
 const routes = Router();
 const candidate = new CandidateController();
@@ -18,6 +19,14 @@ const jobopportunity = new JobOpportunityController();
 const jobopportunity_skill = new JobOpportunity_SkillController();
 const rating = new RatingController();
 
+/* Rotas liberadas */
+routes.post("/login", user.login);
+routes.post('/user', user.create);
+routes.get("/profile", user.getProfile);
+
+// Rotas abaixo estão protegidas
+routes.use(authMiddleware);
+
 
 /* Rotas para CANDIDATE */
 routes.post('/candidate', candidate.create);
@@ -27,7 +36,6 @@ routes.put('/candidate/:idCandidate', candidate.update);
 routes.delete('/candidate/:idCandidate', candidate.delete);
 
 /* Rotas para USER */
-routes.post('/user', user.create);
 routes.get('/user', user.findEmail);
 routes.put('/user/:idUser', user.update);
 routes.delete('/user/:idUser', user.delete);
@@ -78,5 +86,6 @@ routes.get('/jobopportunity_skill/softvsHard', jobopportunity_skill.getSoftVSHar
 routes.post('/rating', rating.create);
 routes.get('/rating/:idInterview', rating.findByInterview);
 // routes.put('/rating/:idRating', rating.update);
+
 
 export default routes;

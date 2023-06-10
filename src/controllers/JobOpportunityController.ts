@@ -150,7 +150,7 @@ export class JobOpportunityController {
         const { idUser } = req.params
 
         if (!idUser || !Number.isInteger(Number(idUser))) {
-            return res.status(404).json({ message: 'Houve algum problema com a chave estrangeira passad por parametro.' })
+            return res.status(404).json({ message: 'Houve algum problema com a chave estrangeira passada por parametro.' })
         }
 
         try {

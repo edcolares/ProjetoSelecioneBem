@@ -1,44 +1,52 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, DeleteDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm"
-import { Interview } from "./Interview"
-import { JobOpportunity } from "./JobOpportunity"
-import * as bcrypt from 'bcrypt'
+import {
+  BeforeInsert,
+  BeforeUpdate,
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from "typeorm";
+import { Interview } from "./Interview";
+import { JobOpportunity } from "./JobOpportunity";
+import * as bcrypt from "bcryptjs";
 
-
-@Entity('user')
+@Entity("user")
 export class User {
-    @PrimaryGeneratedColumn('increment')
-    id: number
+  @PrimaryGeneratedColumn("increment")
+  id: number;
 
-    @Column({ type: 'varchar', length: 120 })
-    name: string
+  @Column({ type: "varchar", length: 120 })
+  name: string;
 
-    @Column({ type: 'varchar', unique: true, length: 254 })
-    email: string
+  @Column({ type: "varchar", unique: true, length: 254 })
+  email: string;
 
-    @Column({ type: 'varchar', length: 254, select: false })
-    password: string
+  @Column({ type: "varchar", length: 254 })
+  password: string;
 
-    @Column({ type: 'boolean', default: 'true' })
-    isActive: boolean
+  @Column({ type: "boolean", default: "true" })
+  isActive: boolean;
 
-    @CreateDateColumn({ name: 'create_At', select: false })
-    createAt: Date
+  @CreateDateColumn({ name: "create_At", select: false })
+  createAt: Date;
 
-    @UpdateDateColumn({ name: 'update_At', select: false })
-    updateAt: Date
+  @UpdateDateColumn({ name: "update_At", select: false })
+  updateAt: Date;
 
-    @DeleteDateColumn({ name: 'remove_At', select: false })
-    removeAt: Date
+  @DeleteDateColumn({ name: "remove_At", select: false })
+  removeAt: Date;
 
-    @BeforeInsert()
-    @BeforeUpdate()
-    async hashPassword() {
-        this.password = await bcrypt.hash(this.password, 10);
-    }
+  @BeforeUpdate()
+  async hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 10);
+  }
 
-    @OneToMany(() => JobOpportunity, jobopportunity => jobopportunity.user)
-    jobopportunities: JobOpportunity[];
+  @OneToMany(() => JobOpportunity, (jobopportunity) => jobopportunity.user)
+  jobopportunities: JobOpportunity[];
 
-    @OneToMany(() => Interview, interview => interview.user)
-    interviews: Interview[];
+  @OneToMany(() => Interview, (interview) => interview.user)
+  interviews: Interview[];
 }
