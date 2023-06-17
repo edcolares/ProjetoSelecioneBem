@@ -146,7 +146,7 @@ export class JobOpportunityController {
      * @param res Response
      * @returns JSON
      */
-    async find(req: Request, res: Response) {
+    async getJobOpportunityByClosingDateOpen(req: Request, res: Response) {
         const { idUser } = req.params
 
         if (!idUser || !Number.isInteger(Number(idUser))) {
@@ -166,6 +166,9 @@ export class JobOpportunityController {
                     user: {
                         id: Number(idUser),
                     }
+                },
+                order: {
+                    expectedDate: "ASC",
                 }
             })
             return res.status(200).json(jobopportunityOpenByUser)
@@ -210,11 +213,13 @@ export class JobOpportunityController {
      */
     async update(req: Request, res: Response) {
         const { idJobOpportunity } = req.params
-        const { title, level, openingDate, expectedDate, closingDate, departmentId, useId } = req.body
+        const { useId, closingDate } = req.body.requestBody
 
-        if (!useId || !Number.isInteger(Number(useId))) {
-            return res.status(200).json({ message: 'O usuário tem que ser identificado.' })
-        }
+        console.log(idJobOpportunity);
+
+
+        console.log('req.body > ', req.body);
+        console.log('req.body.requestBody > ', req.body.requestBody);
 
         if (!idJobOpportunity || !Number.isInteger(Number(idJobOpportunity))) {
             return res.status(200).json({ message: 'Algum problema no parametro Id da oportunidade.' })
@@ -233,7 +238,7 @@ export class JobOpportunityController {
                 return res.status(404).json({ message: 'Não existe oportunidades cadastradas' })
             }
             if (objJobOpportunity.user.id === Number(useId)) {
-                jobopportunityRepository.merge(objJobOpportunity, req.body)
+                jobopportunityRepository.merge(objJobOpportunity, req.body.requestBody)
                 const results = await jobopportunityRepository.save(objJobOpportunity)
                 return res.status(200).json(results)
             } else {
@@ -305,6 +310,8 @@ export class JobOpportunityController {
      * @returns JSON com (open_opportunities, closed_opportunities, delayed_opportunities e all_opportunities)
      */
     async getJobOpportunitiesAllData(req: Request, res: Response) {
+        const { idUser } = req.params;
+
         try {
 
             const jobOpportunityStatistics = await jobopportunityRepository
@@ -312,8 +319,15 @@ export class JobOpportunityController {
                 .select("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL THEN 1 END)", "open_opportunities")
                 .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NOT NULL THEN 1 END)", "closed_opportunities")
                 .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate  > jobOpportunity.expectedDate THEN 1 END)", "delayed_opportunities")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL AND jobOpportunity.expectedDate < CURRENT_DATE THEN 1 END)", "oportunidadeAbertasEmAtraso")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL AND jobOpportunity.expectedDate >= CURRENT_DATE THEN 1 END)", "oportunidadeAbertasDentroPrazo")
                 .addSelect("COUNT(jobOpportunity.id)", "all_opportunities")
+                .where("jobOpportunity.FK_userId = :userId", { userId: Number(idUser) })
                 .getRawMany();
+
+
+            console.log(jobOpportunityStatistics);
+
             return res.status(200).json(jobOpportunityStatistics);
         } catch (error) {
             console.log(error)
@@ -323,12 +337,12 @@ export class JobOpportunityController {
 
 
     /**
- * Seleciona todas as entrevista e gera dados com relação a quantidade total de oportunidades, oportunidade em aberto e 
- * fechadas e as fechadas com atraso.
- * @param req Request
- * @param res Response
- * @returns JSON com (oportunidades_abertas_global, fechadas_prazo_global, fechadas_atraso_global e all_opportunities)
- */
+     * Seleciona todas as entrevista e gera dados com relação a quantidade total de oportunidades, oportunidade em aberto e 
+     * fechadas e as fechadas com atraso.
+     * @param req Request
+     * @param res Response
+     * @returns JSON com (oportunidades_abertas_global, fechadas_prazo_global, fechadas_atraso_global e all_opportunities)
+     */
     async getJobOpportunitiesGlobal(req: Request, res: Response) {
         try {
 
@@ -345,5 +359,36 @@ export class JobOpportunityController {
             return res.status(500).json({ message: 'Internal Server Error' })
         }
     }
+
+
+    /**
+    * 
+    * @param req Request
+    * @param res Response
+    * @returns 
+    */
+    async getJobOpportunitiesMonthByUser(req: Request, res: Response) {
+
+
+        try {
+            const { idUser } = req.params;
+            const jobOpportunityStatistics = await jobopportunityRepository
+                .createQueryBuilder("jobOpportunity")
+                .select("EXTRACT(MONTH FROM jobOpportunity.openingDate)", "month")
+                .addSelect("EXTRACT(YEAR FROM jobOpportunity.openingDate)", "year")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL THEN 1 END)", "open_opportunities")
+                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NOT NULL THEN 1 END)", "closed_opportunities")
+                .innerJoin("jobOpportunity.user", "user")
+                .where("user.id = :idUser", { idUser })
+                .groupBy("month, year")
+                .orderBy("year, month")
+                .getRawMany();
+            return res.status(200).json(jobOpportunityStatistics);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
+
 
 }

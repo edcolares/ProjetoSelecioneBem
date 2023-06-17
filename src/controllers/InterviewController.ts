@@ -201,4 +201,21 @@ export class InterviewController {
     //         return res.status(500).json({ message: 'Internal Sever Error' })
     //     }
     // }
+
+
+    async getTotalInterviewByJobOpportunity(req: Request, res: Response) {
+
+        try {
+            const { idJobOpportunity } = req.params;
+            const interviewTotal = await interviewRepository
+                .createQueryBuilder("interview")
+                .select("COUNT(*)", "interview_count")
+                .where("interview.FK_jobopportunityId = :idJobOpportunity", { idJobOpportunity })
+                .getRawOne();
+            return res.status(200).json(interviewTotal);
+        } catch (error) {
+            console.log(error)
+            return res.status(500).json({ message: 'Internal Server Error' })
+        }
+    }
 }

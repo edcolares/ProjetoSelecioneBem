@@ -21,12 +21,11 @@ const rating = new RatingController();
 
 /* Rotas liberadas */
 routes.post("/login", user.login);
-routes.post('/user', user.create);
+routes.post('/signup', user.create);
 routes.get("/profile", user.getProfile);
 
 // Rotas abaixo estão protegidas
 routes.use(authMiddleware);
-
 
 /* Rotas para CANDIDATE */
 routes.post('/candidate', candidate.create);
@@ -59,6 +58,7 @@ routes.post('/interview', interview.create);
 routes.get('/interview/:idUser', interview.listByUser);
 routes.get('/interview', interview.find);
 routes.get('/interview/:idUser', interview.getInterviewsBetweenDates);
+routes.get('/interview/total/:idJobOpportunity', interview.getTotalInterviewByJobOpportunity)
 // routes.delete('/interview/:idInterview', interview.delete);
 
 /* Rotas para JOBOPPORTUNITY */
@@ -66,9 +66,10 @@ routes.post('/jobopportunity', jobopportunity.create);
 routes.get('/jobopportunity/:idJobOpportunity', jobopportunity.getJobOpportunityById);
 routes.get('/jobopportunity/user/:idUser', jobopportunity.listByUser);
 routes.get('/jobopportunity/report/:idJobOpportunity', jobopportunity.getInterviewsByJobOpportunity)
-routes.get('/jobopportunity/find/:idUser', jobopportunity.find);
+routes.get('/jobopportunity/find/:idUser', jobopportunity.getJobOpportunityByClosingDateOpen);
 routes.get('/jobopportunity/statistics/vacancybyopportunity', jobopportunity.getVagasAbertasPorDepartamento);
-routes.get('/jobopportunity/statistics/allopportunities', jobopportunity.getJobOpportunitiesAllData);
+routes.get('/jobopportunity/statistics/allOpportunitiesByUser/:idUser', jobopportunity.getJobOpportunitiesAllData);
+routes.get('/jobopportunity/statistics/getJobOpportunitiesMonthByUser/:idUser', jobopportunity.getJobOpportunitiesMonthByUser);
 routes.get('/jobopportunity/statistics/globaljobopportunities', jobopportunity.getJobOpportunitiesGlobal);
 routes.put('/jobopportunity/:idJobOpportunity', jobopportunity.update);
 routes.delete('/jobopportunity/:idJobOpportunity', jobopportunity.delete);
@@ -86,6 +87,5 @@ routes.get('/jobopportunity_skill/softvsHard', jobopportunity_skill.getSoftVSHar
 routes.post('/rating', rating.create);
 routes.get('/rating/:idInterview', rating.findByInterview);
 // routes.put('/rating/:idRating', rating.update);
-
 
 export default routes;

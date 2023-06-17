@@ -30,21 +30,19 @@ export class UserController {
     }
 
     const existUser = await userRepository.findOneBy({
-      email,
+      email
     });
 
     if (existUser) {
-      return res.status(200).json({
-        message: "Este e-mail já está cadastrado em nossa base de dados.",
-      });
+      return res.status(400).json({ message: "E-mail já cadastrado" });
     }
 
     try {
-      // const hashPassword = await bcrypt.hash(password, 10);
+      const hashPassword = await bcrypt.hash(password, 10);
       const newUser = userRepository.create({
         name,
         email,
-        password,
+        password: hashPassword,
       });
 
       await userRepository.save(newUser);
@@ -52,7 +50,7 @@ export class UserController {
       //extraindo a senha do objeto newUser
       const { password: _, removeAt, ...user } = newUser;
 
-      return res.status(201).json(user);
+      return res.status(201).json({message: "Usuário cadastrado com sucesso"});
     } catch (error) {
       console.log(error);
       return res.status(500).json({ message: "Internal Server Error" });
