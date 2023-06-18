@@ -9,6 +9,9 @@ export class JobOpportunity {
     @PrimaryGeneratedColumn('increment')
     id: number
 
+    @Column({ type: 'varchar', length: 100, default: '12345' })
+    jobCode: string
+
     @Column({ type: 'varchar', length: 254 })
     title: string
 

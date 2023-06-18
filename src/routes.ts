@@ -71,7 +71,7 @@ routes.get('/jobopportunity/statistics/vacancybyopportunity', jobopportunity.get
 routes.get('/jobopportunity/statistics/allOpportunitiesByUser/:idUser', jobopportunity.getJobOpportunitiesAllData);
 routes.get('/jobopportunity/statistics/getJobOpportunitiesMonthByUser/:idUser', jobopportunity.getJobOpportunitiesMonthByUser);
 routes.get('/jobopportunity/statistics/globaljobopportunities', jobopportunity.getJobOpportunitiesGlobal);
-routes.put('/jobopportunity/:idJobOpportunity', jobopportunity.update);
+routes.put('/jobopportunity/:idJobOpportunity', jobopportunity.setJobOpportunityClosed);
 routes.delete('/jobopportunity/:idJobOpportunity', jobopportunity.delete);
 
 

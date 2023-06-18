@@ -16,10 +16,10 @@ export class JobOpportunityController {
      * @returns JSON
      */
     async create(req: Request, res: Response) {
-        const { title, level, openingDate, expectedDate, departmentId, useId } = req.body
+        const { jobCode, title, level, openingDate, expectedDate, departmentId, useId } = req.body
 
-        if (!title || !level || !openingDate || !expectedDate || !departmentId || !useId) {
-            return res.status(400).json({ message: 'Campos não foram preenchidos corretamente.' })
+        if (!jobCode || !title || !level || !openingDate || !expectedDate || !departmentId || !useId) {
+            return res.status(400).json({ message: 'Preencha todos os campos obrigatórios' })
         }
 
         const department = await departmentRepository.findOneBy({ id: Number(departmentId) })
@@ -34,7 +34,7 @@ export class JobOpportunityController {
         }
 
         try {
-            const newJobOpportunity = jobopportunityRepository.create({ title, level, openingDate, expectedDate, department, user })
+            const newJobOpportunity = jobopportunityRepository.create({ jobCode, title, level, openingDate, expectedDate, department, user })
             await jobopportunityRepository.save(newJobOpportunity)
             return res.status(200).json(newJobOpportunity)
 
@@ -89,13 +89,13 @@ export class JobOpportunityController {
      */
     async getInterviewsByJobOpportunity(req: Request, res: Response) {
         const { idJobOpportunity } = req.params
-        console.log(idJobOpportunity);
+        // console.log(idJobOpportunity);
 
 
         if (!Number.isInteger(Number(idJobOpportunity))) {
             return res.status(200).json({ message: 'Verique as chaves estrangeiras' })
         }
-        console.log('Chegou linha 98');
+        // console.log('Chegou linha 98');
 
         try {
 
@@ -205,27 +205,22 @@ export class JobOpportunityController {
 
 
     /**
-     * Essa função tem a finalidade de atualizar dados de uma JOBOPPORTUNITY, 
-     * desde que seja o mesmo usuário que a criou
+     * Faz o fechamento da vaga, inserindo a data atual do sistema.
      * @param req Request
      * @param res Response
      * @returns JSON
      */
-    async update(req: Request, res: Response) {
-        const { idJobOpportunity } = req.params
-        const { useId, closingDate } = req.body.requestBody
-
-        console.log(idJobOpportunity);
-
-
-        console.log('req.body > ', req.body);
-        console.log('req.body.requestBody > ', req.body.requestBody);
-
-        if (!idJobOpportunity || !Number.isInteger(Number(idJobOpportunity))) {
-            return res.status(200).json({ message: 'Algum problema no parametro Id da oportunidade.' })
-        }
-
+    async setJobOpportunityClosed(req: Request, res: Response) {
+        
         try {
+            const { idJobOpportunity } = req.params
+            const { useId, closingDate } = req.body.requestBody
+    
+    
+            if (!idJobOpportunity || !Number.isInteger(Number(idJobOpportunity))) {
+                return res.status(200).json({ message: 'Algum problema no parametro Id da oportunidade.' })
+            }
+
             const objJobOpportunity = await jobopportunityRepository.findOne({
                 relations: {
                     user: true,
@@ -389,6 +384,5 @@ export class JobOpportunityController {
             return res.status(500).json({ message: 'Internal Server Error' })
         }
     }
-
 
 }
