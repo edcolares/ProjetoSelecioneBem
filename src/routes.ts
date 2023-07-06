@@ -42,7 +42,7 @@ routes.delete('/user/:idUser', user.delete);
 /* Rotas para DEPARTMENT */
 routes.post('/department', department.create);
 routes.get('/department', department.find);
-routes.get('/department/statistics', department.getDepartmentStatistics);
+routes.get('/department/statistics/:idUser', department.getDepartmentStatistics);
 routes.get('/department/opportunities/statistics', department.getDepartmentWithOpportunitiesOpenCloseStatistics);
 routes.put('/department/:idDepartment', department.update);
 routes.delete('department/:idDepartment', department.delete);
@@ -69,10 +69,12 @@ routes.get('/jobopportunity/report/:idJobOpportunity', jobopportunity.getIntervi
 routes.get('/jobopportunity/find/:idUser', jobopportunity.getJobOpportunityByClosingDateOpen);
 routes.get('/jobopportunity/statistics/vacancybyopportunity', jobopportunity.getVagasAbertasPorDepartamento);
 routes.get('/jobopportunity/statistics/allOpportunitiesByUser/:idUser', jobopportunity.getJobOpportunitiesAllData);
-routes.get('/jobopportunity/statistics/getJobOpportunitiesMonthByUser/:idUser', jobopportunity.getJobOpportunitiesMonthByUser);
 routes.get('/jobopportunity/statistics/globaljobopportunities', jobopportunity.getJobOpportunitiesGlobal);
 routes.put('/jobopportunity/:idJobOpportunity', jobopportunity.setJobOpportunityClosed);
 routes.delete('/jobopportunity/:idJobOpportunity', jobopportunity.delete);
+
+// Gera gráfico de oportunidades criadas por mês (Op Abertas e Op Fechadas por mês)
+routes.get('/jobopportunity/statistics/getJobOpportunitiesMonthByUser/:idUser', jobopportunity.getJobOpportunitiesMonthByUser);
 
 
 /* Rotas para JOBOPPORTUNITY_SKILL*/

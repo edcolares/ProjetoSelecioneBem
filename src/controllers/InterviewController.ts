@@ -28,7 +28,11 @@ export class InterviewController {
         }
 
         const candidate = await candidateRepository.findOneBy({ id: Number(FK_candidateId) })
+        console.log(candidate);
+        
         const user = await userRepository.findOneBy({ id: Number(FK_userId) })
+        console.log(user);
+        
         const jobopportunity = await jobopportunityRepository.findOneBy({ id: Number(FK_jobopportunityId) })
         if (!candidate || !user || !jobopportunity) {
             return res.status(404).json({ message: 'Uma das chaves estrangeiras não foi localizada.' })

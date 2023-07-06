@@ -211,12 +211,12 @@ export class JobOpportunityController {
      * @returns JSON
      */
     async setJobOpportunityClosed(req: Request, res: Response) {
-        
+
         try {
             const { idJobOpportunity } = req.params
             const { useId, closingDate } = req.body.requestBody
-    
-    
+
+
             if (!idJobOpportunity || !Number.isInteger(Number(idJobOpportunity))) {
                 return res.status(200).json({ message: 'Algum problema no parametro Id da oportunidade.' })
             }
@@ -364,24 +364,51 @@ export class JobOpportunityController {
     */
     async getJobOpportunitiesMonthByUser(req: Request, res: Response) {
 
-
         try {
             const { idUser } = req.params;
-            const jobOpportunityStatistics = await jobopportunityRepository
+
+            // Total de oportunidades ABERTAS dentro de cada MES
+            const OportunidadesAbertasporMes = await jobopportunityRepository
                 .createQueryBuilder("jobOpportunity")
                 .select("EXTRACT(MONTH FROM jobOpportunity.openingDate)", "month")
                 .addSelect("EXTRACT(YEAR FROM jobOpportunity.openingDate)", "year")
-                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NULL THEN 1 END)", "open_opportunities")
-                .addSelect("COUNT(CASE WHEN jobOpportunity.closingDate IS NOT NULL THEN 1 END)", "closed_opportunities")
+                .addSelect("COUNT(*) FILTER (WHERE jobOpportunity.openingDate IS NOT NULL)", "open_opportunities")
                 .innerJoin("jobOpportunity.user", "user")
                 .where("user.id = :idUser", { idUser })
                 .groupBy("month, year")
                 .orderBy("year, month")
                 .getRawMany();
-            return res.status(200).json(jobOpportunityStatistics);
+
+            // Total de oportunidades FECHADAS dentro de cada MES
+            const OportunidadesFechadasporMes = await jobopportunityRepository
+                .createQueryBuilder("jobOpportunity")
+                .select("EXTRACT(MONTH FROM jobOpportunity.closingDate)", "month")
+                .addSelect("EXTRACT(YEAR FROM jobOpportunity.closingDate)", "year")
+                .addSelect("COUNT(*) FILTER (WHERE jobOpportunity.closingDate IS NOT NULL)", "closed_opportunities")
+                .innerJoin("jobOpportunity.user", "user")
+                .where("user.id = :idUser", { idUser })
+                .groupBy("month, year")
+                .orderBy("year, month")
+                .getRawMany();
+
+
+            // Combinar os resultados em um único array
+            const combinedOpportunities = OportunidadesAbertasporMes.map(openOpportunity => {
+                const { month, year } = openOpportunity;
+                const closedOpportunity = OportunidadesFechadasporMes.find(closedOpportunity => closedOpportunity.month === month && closedOpportunity.year === year);
+                const closed_opportunities = closedOpportunity ? closedOpportunity.closed_opportunities : '0';
+                return {
+                    month,
+                    year,
+                    open_opportunities: openOpportunity.open_opportunities,
+                    closed_opportunities
+                };
+            });
+
+            return res.status(200).json(combinedOpportunities);
         } catch (error) {
-            console.log(error)
-            return res.status(500).json({ message: 'Internal Server Error' })
+            console.log(error);
+            return res.status(500).json({ message: 'Internal Server Error' });
         }
     }
 
